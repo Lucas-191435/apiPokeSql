@@ -1,0 +1,225 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum AddressType {
+  RESIDENTIAL
+  COMMERCIAL
+  OTHER
+}
+
+enum CardStatus {
+  CREATED
+  UNBOUND
+  NORMAL
+  CANCELED
+  BLOCKED
+}
+
+enum AuthorizationCategory {
+  AUTHORIZATION
+  DECLINED
+  CONFIRMATION
+  INSTALLMENT
+  CANCELLATION
+}
+
+enum CardType {
+  PLASTIC
+  VIRTUAL
+}
+
+enum MaritalStatus {
+  SINGLE
+  MARRIED
+  DIVORCED
+  WIDOWER
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  NOTPROVIDED
+}
+
+enum Role {
+  ADMIN
+  CLIENT
+}
+
+// model Post {
+//   id        Int     @id @default(autoincrement())
+//   title     String
+//   content   String?
+//   published Boolean @default(false)
+// }
+
+model User {
+  id        String    @id @default(uuid()) @map("_id")
+  email     String    @unique
+  role      Role      @default(CLIENT)
+  name      String
+  authCode  String?
+  expiresAt DateTime?
+  // Avatar    File?     @relation(fields: [avatarId], references: [id])
+  avatarId  String?
+  document  String    @unique
+
+  status      Boolean @default(true)
+  status_name String?
+
+  // account Account[]
+}
+
+// model Account {
+//   id           String @id @default(uuid())
+//   account_id   Int?
+//   main_card_id String? @unique
+//   name         String
+//   document     String @unique
+
+//   status      Boolean @default(true)
+//   status_name String?
+
+//   cards          Card[]
+//   customers      Customer[]
+//   application_id Int?
+
+//   addresses AccountAddress[]
+//   phones    AccountPhone[]
+
+//   customer_id        Int?
+//   entity_id          Int?
+//   due_date_id        Int?
+//   due_date_day       Int?
+//   max_credit_limit   Float   @default(0)
+//   total_credit_limit Float   @default(0)
+//   accrual_status     String?
+
+//   program    Program? @relation(fields: [program_id], references: [id])
+//   program_id Int?
+
+//   user   User?  @relation(fields: [userId], references: [id])
+//   userId String
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
+
+// model AccountPhone {
+//   id           String   @id @default(uuid())
+//   phone        String   @unique
+//   phone_type   String
+//   country_code String
+//   area_code    Int
+//   active       Boolean
+//   account      Account? @relation(fields: [accountId], references: [id])
+
+//   accountId String?
+// }
+
+// model AccountAddress {
+//   id                    String      @id @default(uuid())
+//   address               String
+//   number                Int
+//   country_code          String
+//   country               String
+//   neighborhood          String
+//   city                  String
+//   state                 String
+//   zip_code              String
+//   address_type          AddressType @default(COMMERCIAL)
+//   complementary_address String?
+//   mailing_address       Boolean
+//   active                Boolean
+//   account               Account?    @relation(fields: [accountId], references: [id])
+
+//   accountId String?
+// }
+
+// model Program {
+//   id         Int       @id @default(autoincrement())
+//   name       String
+//   is_active  Boolean
+//   program_id Int
+//   due_dates  DueDate[]
+//   createdAt  DateTime  @default(now())
+//   updatedAt  DateTime  @updatedAt
+
+//   accounts Account[]
+// }
+
+// model DueDate {
+//   id          Int     @id @default(autoincrement())
+//   day         Int
+//   active      Boolean
+//   due_date_id Int
+//   programId   Int
+//   program     Program @relation(fields: [programId], references: [id])
+// }
+
+// model Card {
+//   id                          String     @id @default(uuid())
+//   name                        String
+//   type                        CardType   @default(VIRTUAL)
+//   status                      CardStatus @default(CREATED)
+//   printed_name                String?
+//   last_four_digits            String?
+//   expiration_date             DateTime?
+//   isDependentCard             Boolean?
+//   isNoNameCard                Boolean?
+//   bulkId                      String?
+//   cvv_rotation_interval_hours Int?
+//   transaction_limit           Float?
+//   abu_enabled                 Boolean?
+//   mode_type                   String?
+
+//   logo                 String?
+//   hasChangedPassword   Boolean?
+//   lastNormalStatusDate DateTime?
+//   trackingCode         String?
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   account   Account? @relation(fields: [accountId], references: [id])
+//   accountId String?
+
+//   customer   Customer? @relation(fields: [customerId], references: [id])
+//   customerId String?
+// }
+
+// model Customer {
+//   id        String   @id @default(uuid())
+//   name      String
+//   accountId String?
+//   cards     Card[]
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   account Account? @relation(fields: [accountId], references: [id])
+// }
+
+// enum FileType {
+//   Link
+//   Attachment
+// }
+
+// model File {
+//   id       String   @id @default(uuid())
+//   name     String?
+//   path     String?
+//   url      String?
+//   fileType FileType @default(Attachment)
+//   users    User[]
+
+//   @@map("files")
+// }

@@ -1,0 +1,48 @@
+{
+  "name": "digitaleazy-webapp-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsnd -r dotenv/config -r tsconfig-paths/register --transpile-only --rs --respawn --ignore-watch node_modules src/server.ts",
+    "build": "tsc",
+    "start": "node -r dotenv/config ./dist/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/cors": "2.8.13",
+    "@types/express": "4.17.17",
+    "@types/jsonwebtoken": "9.0.2",
+    "@types/multer": "1.4.7",
+    "@types/node": "^22.5.0",
+    "prisma": "^5.18.0",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "@aws-sdk/client-ses": "^3.637.0",
+    "@aws-sdk/credential-provider-node": "^3.637.0",
+    "@prisma/client": "^5.18.0",
+    "@types/nodemailer-express-handlebars": "4.0.2",
+    "@types/uuid": "9.0.2",
+    "axios": "^1.6.2",
+    "bcrypt": "^5.0.1",
+    "cors": "2.8.5",
+    "date-fns": "2.30.0",
+    "dotenv": "16.0.3",
+    "express": "4.18.2",
+    "express-handlebars": "7.1.0",
+    "http-status-codes": "2.2.0",
+    "jsonwebtoken": "9.0.0",
+    "multer": "1.4.5-lts.1",
+    "nodemailer-express-handlebars": "6.1.0",
+    "cpf-cnpj-validator": "^1.0.3",
+    "yup": "^0.32.11",
+    "uuid": "9.0.0"
+  }
+}
