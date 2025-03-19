@@ -16,9 +16,9 @@ app.use('/avatars', express.static(join(__dirname, 'tmp', 'avatars')))
 
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json({
-    name: 'DigitalEazy-WebApp-API',
-    version: process.env.npm_package_version,
-    env: process.env.ENVIRONMENT
+    name: 'PokeAPI',
+    // version: process.env.npm_package_version,
+    // env: process.env.ENVIRONMENT
   })
 })
 

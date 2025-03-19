@@ -93,7 +93,7 @@ export namespace AppUserService {
 
     create: AppUserService.Create.Handler;
 
-    loginUserFistStep: AppUserService.LoginUserFistStep.Handler;
-    loginUserSecondStep: AppUserService.LoginUserSecondStep.Handler;
+    // loginUserFistStep: AppUserService.LoginUserFistStep.Handler;
+    // loginUserSecondStep: AppUserService.LoginUserSecondStep.Handler;
   }
 }

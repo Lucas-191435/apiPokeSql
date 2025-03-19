@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -55,28 +55,24 @@ enum Role {
   CLIENT
 }
 
-// model Post {
-//   id        Int     @id @default(autoincrement())
-//   title     String
-//   content   String?
-//   published Boolean @default(false)
-// }
-
 model User {
-  id        String    @id @default(uuid()) @map("_id")
-  email     String    @unique
-  role      Role      @default(CLIENT)
-  name      String
-  authCode  String?
-  expiresAt DateTime?
-  // Avatar    File?     @relation(fields: [avatarId], references: [id])
-  avatarId  String?
-  document  String    @unique
+  id         String   @id @default(uuid()) // @map("_id") Removido para MySQL
+  email      String   @unique
+  role       Role     @default(CLIENT)
+  name       String
+  // authCode   String?
+  // expiresAt  DateTime?
 
-  status      Boolean @default(true)
-  status_name String?
+  // avatarId   String?  // Relacionamento opcional com um possível modelo de Avatar
+  // document   String   @unique
 
-  // account Account[]
+  // status      Boolean @default(true)
+  // status_name String?
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("users") // Nome da tabela no banco de dados
 }
 
 // model Account {
