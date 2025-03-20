@@ -11,12 +11,31 @@ JsonWebTokenError;
 class UserService implements AppUserService.IUserService {
   create: AppUserService.Create.Handler = async ({ data }) => {
     try {
+      console.log(data.email);
+      if (!data.email) {
+        throw {
+          message: "Email não foi enviado ou é inválido!",
+          statusCode: 400,
+        };
+      }
+      
+      const userAlreadyExists = await prismaClient.user.findFirst({
+        where: { email: data.email },
+      });
 
-      throw {
-        message: "Falhou ao criar a conta!",
-        statusCode: 500,
-        details: 'error',
-      };
+      console.log(userAlreadyExists)
+      if (userAlreadyExists) {
+        throw {
+          message: "Já existe um usuário com esse email!",
+          statusCode: 409,
+        };
+      }
+
+      const user = await prismaClient.user.create({
+        data: data
+      });
+
+      return user;
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (

@@ -11,13 +11,15 @@ class AccountController {
 
   async create(req: Request, res: Response): Promise<Response> {
     try {
+     
+      console.log(req.body);
       const data = req.body;
       const user = await this.userService.create({
         data,
       });
 
       return res
-        .status(201)
+        .status(200)
         .json({ message: "Conta adicionada.", data: user });
     } catch (error) {
       const err = error as IError;

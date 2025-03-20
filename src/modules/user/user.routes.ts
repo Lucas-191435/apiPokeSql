@@ -2,17 +2,20 @@ import { Request, Response, Router } from "express";
 import AccountController from "./user.controller";
 import { valideteAccountToken } from "../../middlewares/valideteAccountToken";
 import { validateRequest } from "../../middlewares/validateRequest";
-
+import multer from "multer"
 import {
   createUserSchema,
 } from "./user.schema";
+import multerConfig from "../../config/multerConfig";
 
 
 const routes = Router();
 
 const userController = new AccountController();
 
-routes.post("/user", (req: Request, res: Response) =>
+const router = Router()
+const upload = multer(multerConfig)
+routes.post("/user",  (req: Request, res: Response) =>
   userController.create(req, res)
 );
 

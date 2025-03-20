@@ -20,36 +20,36 @@ export namespace AppUserService {
     export type Args = {
       data: {
         name: string;
-        document: string;
+        // document: string;
         email: string;
         role: "CLIENT" | "ADMIN";
-        card: {
-          transaction_limit?: number,
-          printed_name: "cartao teste",
-          type: "PLASTIC" | "VIRTUAL"
-        };
+        // card: {
+        //   transaction_limit?: number,
+        //   printed_name: "cartao teste",
+        //   type: "PLASTIC" | "VIRTUAL"
+        // };
 
-        accountAddress: {
-          address: string,
-          number: number,
-          country_code: string,
-          country: string,
-          neighborhood: string,
-          city: string,
-          state: string,
-          zip_code: string,
-          address_type: "COMMERCIAL" | "RESIDENTIAL" | "OTHER",
-          mailing_address: boolean,
-          active: boolean
-        };
+        // accountAddress: {
+        //   address: string,
+        //   number: number,
+        //   country_code: string,
+        //   country: string,
+        //   neighborhood: string,
+        //   city: string,
+        //   state: string,
+        //   zip_code: string,
+        //   address_type: "COMMERCIAL" | "RESIDENTIAL" | "OTHER",
+        //   mailing_address: boolean,
+        //   active: boolean
+        // };
 
-        accountPhone: {
-          phone: string,
-          phone_type: string,
-          country_code: string,
-          area_code: number,
-          active: true
-        }
+        // accountPhone: {
+        //   phone: string,
+        //   phone_type: string,
+        //   country_code: string,
+        //   area_code: number,
+        //   active: true
+        // }
       };
       file?: any;
     };
