@@ -12,12 +12,12 @@ class AccountController {
   async create(req: Request, res: Response): Promise<Response> {
     try {
      
-      console.log(req.body);
-      // console.log('req.file',req.file);
+      // console.log(req.body);
+      console.log('req.file',req.files);
       const data = req.body;
       const user = await this.userService.create({
         data,
-        file: req.file,
+        files: req.files,
       });
 
       return res

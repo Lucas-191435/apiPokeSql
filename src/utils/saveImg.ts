@@ -5,41 +5,39 @@ import { Request } from 'express'
 interface MulterRequest extends Request {
   file?: Express.Multer.File
 }
-async function saveImage(file: any, userId: string): Promise<string | null> {
-    if (!file) return null
-  
-    // Define o diretório de destino com base no fieldname
+async function saveImages(files: Express.Multer.File[], userId: string): Promise<string[]> {
+  if (!files || files.length === 0) return []
+
+  const savedFileNames: string[] = []
+
+  for (const file of files) {
     let uploadPath: string
     switch (file.fieldname) {
       case 'avatarProfile':
-        uploadPath = path.join(__dirname, '../..', 'tmp', 'avatarProfile');  // Corrigido: saindo de 'src/'
-        break;
+        uploadPath = path.join(__dirname, '../..', 'tmp', 'avatarProfile')
+        break
       case 'eventoImage':
-        uploadPath = path.join(__dirname, '../..',  'tmp', 'bannerProfile');  // Corrigido: saindo de 'src/'
-        break;
+        uploadPath = path.join(__dirname, '../..', 'tmp', 'bannerProfile')
+        break
       default:
-        uploadPath = path.join(__dirname, '../..',  'tmp', 'imgs');  // Corrigido: saindo de 'src/'
+        uploadPath = path.join(__dirname, '../..', 'tmp', 'imgs')
     }
-  
+
     try {
-      // Garante que o diretório existe
       await fs.mkdir(uploadPath, { recursive: true })
-  
-      // Define o nome do arquivo
       const fileName = `${Date.now()}-${file.originalname}`
       const fullPath = path.join(uploadPath, fileName)
-  
-      // Debugging: Verifica se o caminho está correto
+
       console.log('Salvando imagem em:', fullPath)
-  
-      // Salva o arquivo do buffer para o disco
       await fs.writeFile(fullPath, file.buffer)
-  
-      return fileName
+
+      savedFileNames.push(fileName)
     } catch (err) {
       console.error('Erro ao salvar a imagem:', err)
-      return null
     }
   }
 
-export { saveImage }
+  return savedFileNames
+}
+
+export { saveImages }

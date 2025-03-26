@@ -18,8 +18,9 @@ const userController = new AccountController();
 
 const router = Router()
 // const upload = multer(multerConfig)
-routes.post("/user", upload.single('avatarProfile'), (req: Request, res: Response) =>
-  userController.create(req, res)
+routes.post("/user", upload.array('avatarProfile',2), (req: Request, res: Response) =>
+  { console.log(req.files);
+    userController.create(req, res)}
 );
 
 routes.get("/user/:userId", (req: Request, res: Response) =>

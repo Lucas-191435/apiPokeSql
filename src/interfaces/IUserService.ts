@@ -51,7 +51,7 @@ export namespace AppUserService {
         //   active: true
         // }
       };
-      file?: any;
+      files?: any;
     };
     export type Result = User | IError;
     export type Handler = ServiceFn<Args, Promise<Result>>;

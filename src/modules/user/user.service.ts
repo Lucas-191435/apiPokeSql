@@ -6,11 +6,11 @@ import { JsonWebTokenError, sign } from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 import { generateCode } from "../../utils/helpers";
 import { Mail } from "../../utils/Mail";
-import { saveImage } from "../../utils/saveImg";
+import {  saveImages } from "../../utils/saveImg";
 
 JsonWebTokenError;
 class UserService implements AppUserService.IUserService {
-  create: AppUserService.Create.Handler = async ({ data, file }) => {
+  create: AppUserService.Create.Handler = async ({ data, files }) => {
     try {
       console.log(data.email);
       if (!data.email) {
@@ -38,16 +38,16 @@ class UserService implements AppUserService.IUserService {
 
 
       // Só salva a imagem se o usuário foi criado com sucesso
-      if (file) {
-        console.log('entrou pra criar')
-        const fileName = await saveImage(file, user.id)
-
-        // Atualiza o usuário com o nome da imagem salva
+      if (files && files.length > 0) {
+        console.log('Entrou pra criar com múltiplos arquivos')
+  
+        const fileNames = await saveImages(files, user.id)
+  
         const updatedUser = await prismaClient.user.update({
           where: { id: user.id },
-          data: { avatar: fileName }
+          data: { avatar: JSON.stringify(fileNames) } // Salvando como JSON no banco
         })
-
+  
         return updatedUser
       }
 
