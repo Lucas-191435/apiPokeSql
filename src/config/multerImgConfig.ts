@@ -1,6 +1,4 @@
 import multer, { diskStorage, FileFilterCallback } from 'multer'
-import { Request } from 'express'
-import { randomBytes } from 'crypto'
 import path from 'path'
 
 const upload = multer({

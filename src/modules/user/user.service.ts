@@ -1,11 +1,7 @@
 import { Prisma } from "@prisma/client";
 import prismaClient from "../../database/index";
 import { AppUserService } from "../../interfaces/IUserService";
-import axios from "axios";
 import { JsonWebTokenError, sign } from "jsonwebtoken";
-import { v4 as uuidv4 } from "uuid";
-import { generateCode } from "../../utils/helpers";
-import { Mail } from "../../utils/Mail";
 import {  saveImages } from "../../utils/saveImg";
 
 JsonWebTokenError;

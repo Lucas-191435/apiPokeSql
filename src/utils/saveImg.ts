@@ -1,10 +1,6 @@
 import path from 'path'
 import fs from 'fs/promises'
-import { Request } from 'express'
 
-interface MulterRequest extends Request {
-  file?: Express.Multer.File
-}
 async function saveImages(files: Express.Multer.File[], userId: string): Promise<string[]> {
   if (!files || files.length === 0) return []
 
