@@ -60,6 +60,7 @@ model User {
   email      String   @unique
   role       Role     @default(CLIENT)
   name       String
+  avatar       String?
   // authCode   String?
   // expiresAt  DateTime?
 

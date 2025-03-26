@@ -7,16 +7,23 @@ import {
   createUserSchema,
 } from "./user.schema";
 import multerConfig from "../../config/multerConfig";
-
+import upload from "../../config/multerImgConfig";
+interface MulterRequest extends Request {
+  file?: Express.Multer.File
+}
 
 const routes = Router();
 
 const userController = new AccountController();
 
 const router = Router()
-const upload = multer(multerConfig)
-routes.post("/user",  (req: Request, res: Response) =>
+// const upload = multer(multerConfig)
+routes.post("/user", upload.single('avatarProfile'), (req: Request, res: Response) =>
   userController.create(req, res)
+);
+
+routes.get("/user/:userId", (req: Request, res: Response) =>
+  userController.getUser(req, res)
 );
 
 // routes.get(

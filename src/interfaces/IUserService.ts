@@ -57,6 +57,14 @@ export namespace AppUserService {
     export type Handler = ServiceFn<Args, Promise<Result>>;
   }
 
+  export namespace getUser {
+    export type Args = {
+      userId: string
+    };
+    export type Result = User | IError;
+    export type Handler = ServiceFn<Args, Promise<Result>>;
+  }
+
   export namespace FindByDocument {
     export type Args = string;
     export type Result = User | null | IError;

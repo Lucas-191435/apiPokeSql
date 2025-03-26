@@ -6,10 +6,11 @@ import { JsonWebTokenError, sign } from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 import { generateCode } from "../../utils/helpers";
 import { Mail } from "../../utils/Mail";
+import { saveImage } from "../../utils/saveImg";
 
 JsonWebTokenError;
 class UserService implements AppUserService.IUserService {
-  create: AppUserService.Create.Handler = async ({ data }) => {
+  create: AppUserService.Create.Handler = async ({ data, file }) => {
     try {
       console.log(data.email);
       if (!data.email) {
@@ -18,7 +19,7 @@ class UserService implements AppUserService.IUserService {
           statusCode: 400,
         };
       }
-      
+
       const userAlreadyExists = await prismaClient.user.findFirst({
         where: { email: data.email },
       });
@@ -34,6 +35,21 @@ class UserService implements AppUserService.IUserService {
       const user = await prismaClient.user.create({
         data: data
       });
+
+
+      // Só salva a imagem se o usuário foi criado com sucesso
+      if (file) {
+        console.log('entrou pra criar')
+        const fileName = await saveImage(file, user.id)
+
+        // Atualiza o usuário com o nome da imagem salva
+        const updatedUser = await prismaClient.user.update({
+          where: { id: user.id },
+          data: { avatar: fileName }
+        })
+
+        return updatedUser
+      }
 
       return user;
     } catch (error) {
@@ -57,8 +73,40 @@ class UserService implements AppUserService.IUserService {
     }
   };
 
+  getUser: AppUserService.getUser.Handler = async ({ userId }) => {
+    try {
+      const user = await prismaClient.user.findFirst({
+        where: { id: userId },
+      })
 
+      if (!user) {
+        throw {
+          message: "Usuario não encontrado",
+          statusCode: 404,
+        };
+      }
 
+      return user
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (
+          error.code === "P2002" &&
+          error.meta?.target === "User_document_key"
+        ) {
+          throw {
+            message: "Já existe uma conta com esse documento!",
+            statusCode: 409,
+          };
+        }
+      }
+      console.log(error);
+      throw {
+        message: "Falhou ao encontrar a conta!",
+        statusCode: 500,
+        details: error,
+      };
+    }
+  };
 }
 
 export default UserService;
