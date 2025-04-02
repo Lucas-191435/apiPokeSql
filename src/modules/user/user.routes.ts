@@ -6,7 +6,6 @@ import multer from "multer"
 import {
   createUserSchema,
 } from "./user.schema";
-import multerConfig from "../../config/multerConfig";
 import upload from "../../config/multerImgConfig";
 interface MulterRequest extends Request {
   file?: Express.Multer.File
@@ -16,7 +15,6 @@ const routes = Router();
 
 const userController = new AccountController();
 
-const router = Router()
 // const upload = multer(multerConfig)
 routes.post("/user", upload.array('avatarProfile',2), (req: Request, res: Response) =>
   { console.log(req.files);

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;600&display=swap"
+      rel="stylesheet"
+    />
+    <title>Redefina sua senha do Salescode</title>
+    <style>
+      body {
+        font-family: "Open Sans", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+      }
+      .email-container {
+        max-width: 475px;
+        margin: 40px auto;
+        background-color: #ffffff;
+        border-radius: 18px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        border: 1px solid #e0e0e0;
+      }
+      .header {
+        background-color: #ffffff;
+        padding: 20px 30px;
+        text-align: center;
+      }
+      .header img {
+        width: 150px;
+      }
+      .title {
+        color: #333333;
+        font-weight: 500;
+        font-size: small;
+        text-align: center;
+      }
+      .titleName {
+        color: #333333;
+        font-weight: normal;
+        font-size: small;
+        text-align: left;
+      }
+      .body {
+        padding: 4px 30px;
+      }
+      .body h2 {
+        color: #333333;
+        font-weight: 600;
+      }
+      .body p {
+        color: #666666;
+        line-height: 1.5;
+      }
+      .token {
+        color: #000;
+        font-size: 24px;
+        text-align: center;
+        margin: 25px 0;
+        letter-spacing: 2px;
+        font-weight: 600;
+      }
+      .warning-box {
+        background-color: #FFFBEB;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #F9C56D;
+        color: #6B7280;
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 12px;
+        text-decoration: none;
+        text-align: left;
+        font-size: 12px;
+        width: 80%;
+      }
+      .buttonArea {
+        text-align: center;
+        padding: 26px 0px;
+      }
+      .button {
+        background-color: #3644f5;
+        color: #fff !important;
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 35px 0px 0 0;
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: 600;
+        text-align: center;
+        width: 80%;
+      }
+    </style>
+  </head>
+  <body>
+    <table class="email-container">
+      <tr>
+        <td class="header">
+          <!-- substitua src pelo link real para a imagem do logo -->
+          {{!-- <img src="{{logoUrl}}" alt="Salescode Logo" /> --}}
+        </td>
+      </tr>
+      <tr>
+        <td class="body">
+          <h2 class="title">Redefina sua senha do Salescode</h2>
+          <p class="titleName">Olá {{name}},</p>
+          <p>
+            Recebemos uma solicitação para redefinir a senha da sua conta.
+            Informe o token abaixo para prosseguir.
+          </p>
+          {{!-- <div class="token">{{recoveryToken}}</div> --}}
+          <p>
+            Após entrar, por segurança, altere sua senha clicando no menu que
+            tem o nome do seu usuário (aquele no canto superior direito) e
+            depois na opção "Recuperar senha".
+          </p>
+          <!-- substitua href pelo link real para o acesso -->
+          <p>Atenciosamente,<br />Equipe Salescode</p>
+          
+        </td>
+        
+        
+      </tr>
+      
+
+ 
+      <td class="buttonArea">
+        <a
+          class="warning-box"
+          >
+          Importante:<br />
+              • Não responda a este e-mail. Esté é um endereço de e-mail
+              automático.<br />
+              • Se você não solicitou a redefinição da sua senha, entre em
+              contato com a nossa equipe de suporte em <i style="font-style: normal !important; color: #3644f5 !important; display: inline-block;">suporte@salescode.com.br</i>
+          </a
+        >
+        {{!-- <a
+          style="line"
+          href="{{appUrl}}"
+          class="button"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Acessar Salescode</a
+        > --}}
+      </td>
+    </table>
+  </body>
+</html>

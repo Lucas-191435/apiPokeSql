@@ -34,9 +34,6 @@ class AccountController {
 
   async getUser(req: Request, res: Response): Promise<Response> {
     try {
-     
-      console.log(req.params);
-      // console.log('req.file',req.file);
       const {userId} = req.params;
       const user = await this.userService.getUser({
         userId
