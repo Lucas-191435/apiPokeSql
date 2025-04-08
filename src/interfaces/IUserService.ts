@@ -20,7 +20,7 @@ export namespace AppUserService {
     export type Args = {
       data: {
         name: string;
-        // document: string;
+        password: string;
         email: string;
         role: "CLIENT" | "ADMIN";
         // card: {
@@ -71,27 +71,13 @@ export namespace AppUserService {
     export type Handler = ServiceFn<Args, Promise<Result>>;
   }
 
-  export namespace LoginUserFistStep {
-    export type Args = string;
+  export namespace Login {
+    export type Args = {
+      email: string,
+      password: string
+    };
     export type Result =
-      | {
-        document: string;
-        name: string;
-      }
-      | null
-      | IError;
-    export type Handler = ServiceFn<Args, Promise<Result>>;
-  }
-
-  export namespace LoginUserSecondStep {
-    export type Args = string;
-    export type Result =
-      | {
-        document: string;
-        name: string;
-        id: string;
-        token: string;
-      }
+      | {user: User, token: string}
       | null
       | IError;
     export type Handler = ServiceFn<Args, Promise<Result>>;

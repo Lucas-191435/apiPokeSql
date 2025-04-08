@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import AccountController from "./user.controller";
-import { valideteAccountToken } from "../../middlewares/valideteAccountToken";
+import { valideteUserToken } from "../../middlewares/valideteUserToken";
 import { validateRequest } from "../../middlewares/validateRequest";
 import multer from "multer"
 import {
@@ -23,7 +23,11 @@ routes.post("/user", upload.array('avatarProfile',2), (req: Request, res: Respon
     userController.create(req, res)}
 );
 
-routes.get("/user/:userId", (req: Request, res: Response) =>
+routes.post("/user/login", (req: Request, res: Response) =>
+    userController.login(req, res)
+);
+
+routes.get("/user/:userId", valideteUserToken, (req: Request, res: Response) =>
   userController.getUser(req, res)
 );
 

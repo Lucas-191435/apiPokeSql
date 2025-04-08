@@ -12,7 +12,6 @@ class AccountController {
   async create(req: Request, res: Response): Promise<Response> {
     try {
      
-      // console.log(req.body);
       console.log('req.file',req.files);
       const data = req.body;
       const user = await this.userService.create({
@@ -53,6 +52,38 @@ class AccountController {
         .json({ message: "Conta encontrada.", data: {
           ...user,
           avatarUrl: `${process.env.APP_URL}/avatars/${user?.avatar}`
+        } });
+    } catch (error) {
+      const err = error as IError;
+      return res
+        .status(err.statusCode || 500)
+        .json({ message: err.message, details: err.details });
+    }
+  }
+
+  async login(req: Request, res: Response): Promise<Response> {
+    try {
+     
+      console.log("req.body", req.body);
+      // console.log('req.file',req.file);
+      const {email,
+        password} = req.body;
+      const data = await this.userService.login({
+        email,
+        password
+      });
+
+      if (data && 'statusCode' in data) {
+        return res
+          .status(data.statusCode || 500)
+          .json({ message: data.message, details: data.details });
+      }
+
+      return res
+        .status(200)
+        .json({ message: "Conta encontrada.", token: data?.token, data: {
+          ...data?.user,
+          avatarUrl: `${process.env.APP_URL}/avatars/${data?.user.avatar}`
         } });
     } catch (error) {
       const err = error as IError;

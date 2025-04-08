@@ -9,7 +9,7 @@ interface IJwtPayload {
   sub: string;
 }
 
-const valideteAccountToken = async (
+const valideteUserToken = async (
   req: Request,
   res: any,
   next: NextFunction
@@ -25,7 +25,7 @@ const valideteAccountToken = async (
   try {
     const { sub: id } = verify(
       token,
-      String(process.env.SECRET_KEY)
+      String(process.env.JWT_SECRET)
     ) as IJwtPayload;
 
     const user = await prismaClient.user.findFirst({ where: { id } });
@@ -37,4 +37,4 @@ const valideteAccountToken = async (
   }
 };
 
-export { IJwtPayload, valideteAccountToken };
+export { IJwtPayload, valideteUserToken };

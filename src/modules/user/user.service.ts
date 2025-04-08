@@ -2,8 +2,9 @@ import { Prisma } from "@prisma/client";
 import prismaClient from "../../database/index";
 import { AppUserService } from "../../interfaces/IUserService";
 import { JsonWebTokenError, sign } from "jsonwebtoken";
-import {  saveImages } from "../../utils/saveImg";
-
+import { saveImages } from "../../utils/saveImg";
+import bcrypt from 'bcrypt'
+import authConfig from "../../config/authConfig";
 JsonWebTokenError;
 class UserService implements AppUserService.IUserService {
   create: AppUserService.Create.Handler = async ({ data, files }) => {
@@ -28,22 +29,27 @@ class UserService implements AppUserService.IUserService {
         };
       }
 
+      const hashedPassword = await bcrypt.hash(data.password, 10)
+
       const user = await prismaClient.user.create({
-        data: data
+        data: {
+          ...data,
+          password: hashedPassword
+        }
       });
 
 
       // Só salva a imagem se o usuário foi criado com sucesso
       if (files && files.length > 0) {
         console.log('Entrou pra criar com múltiplos arquivos')
-  
+
         const fileNames = await saveImages(files, user.id)
-  
+
         const updatedUser = await prismaClient.user.update({
           where: { id: user.id },
           data: { avatar: JSON.stringify(fileNames) } // Salvando como JSON no banco
         })
-  
+
         return updatedUser
       }
 
@@ -83,6 +89,52 @@ class UserService implements AppUserService.IUserService {
       }
 
       return user
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (
+          error.code === "P2002" &&
+          error.meta?.target === "User_document_key"
+        ) {
+          throw {
+            message: "Já existe uma conta com esse documento!",
+            statusCode: 409,
+          };
+        }
+      }
+      console.log(error);
+      throw {
+        message: "Falhou ao encontrar a conta!",
+        statusCode: 500,
+        details: error,
+      };
+    }
+  };
+
+
+  login: AppUserService.Login.Handler = async ({ email, password }) => {
+    try {
+      const user = await prismaClient.user.findFirst({
+        where: { email: email },
+      })
+
+      if (!user) {
+        throw {
+          message: "Usuario não encontrado",
+          statusCode: 404,
+        };
+      }
+
+      const valid = await bcrypt.compare(password, user.password || '')
+      if (!valid) {
+        throw {
+          message: "Senha invalida",
+          statusCode: 409,
+        };
+      }
+
+      const token = sign({ id: user.id }, String(authConfig.secret), { expiresIn: '1h', algorithm: "HS512", })
+
+      return { user, token: token }
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (
