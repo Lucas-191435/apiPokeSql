@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
 import prismaClient from "../../database/index";
 import { AppUserService } from "../../interfaces/IUserService";
 import { JsonWebTokenError, sign } from "jsonwebtoken";
@@ -134,7 +134,15 @@ class UserService implements AppUserService.IUserService {
 
       const token = sign({ id: user.id }, String(authConfig.secret), { expiresIn: '1h', algorithm: "HS512", })
 
-      return { user, token: token }
+      return {
+        user: {
+          id: user.id,
+          avatar: user.avatar,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+        }, token: token
+      }
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (

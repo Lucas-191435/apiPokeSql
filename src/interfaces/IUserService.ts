@@ -77,7 +77,7 @@ export namespace AppUserService {
       password: string
     };
     export type Result =
-      | {user: User, token: string}
+      | {user: Pick<User, 'name' | 'email' | 'avatar' | 'role' | 'id'>, token: string}
       | null
       | IError;
     export type Handler = ServiceFn<Args, Promise<Result>>;
