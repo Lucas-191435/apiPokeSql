@@ -23,33 +23,6 @@ export namespace AppUserService {
         password: string;
         email: string;
         role: "CLIENT" | "ADMIN";
-        // card: {
-        //   transaction_limit?: number,
-        //   printed_name: "cartao teste",
-        //   type: "PLASTIC" | "VIRTUAL"
-        // };
-
-        // accountAddress: {
-        //   address: string,
-        //   number: number,
-        //   country_code: string,
-        //   country: string,
-        //   neighborhood: string,
-        //   city: string,
-        //   state: string,
-        //   zip_code: string,
-        //   address_type: "COMMERCIAL" | "RESIDENTIAL" | "OTHER",
-        //   mailing_address: boolean,
-        //   active: boolean
-        // };
-
-        // accountPhone: {
-        //   phone: string,
-        //   phone_type: string,
-        //   country_code: string,
-        //   area_code: number,
-        //   active: true
-        // }
       };
       files?: any;
     };
@@ -58,6 +31,28 @@ export namespace AppUserService {
   }
 
   export namespace getUser {
+    export type Args = {
+      userId: string
+    };
+    export type Result = User | IError;
+    export type Handler = ServiceFn<Args, Promise<Result>>;
+  }
+
+  export namespace updateUser {
+    export type Args = {
+      userId: string;
+      data: {
+        name?: string;
+        password?: string;
+        email?: string;
+        role?: "CLIENT" | "ADMIN";
+      };
+    };
+    export type Result = User | IError;
+    export type Handler = ServiceFn<Args, Promise<Result>>;
+  }
+
+  export namespace deleteUser {
     export type Args = {
       userId: string
     };

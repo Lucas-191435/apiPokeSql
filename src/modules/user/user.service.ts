@@ -111,6 +111,104 @@ class UserService implements AppUserService.IUserService {
   };
 
 
+  updateUser: AppUserService.updateUser.Handler = async ({ data, userId }) => {
+    try {
+      const existingUser = await prismaClient.user.findUnique({
+        where: { id: userId },
+      })
+
+      if(!existingUser) {
+        throw {
+          message: "Usuario não encontrado",
+          statusCode: 404,
+        };
+      }
+
+      const updateData = { ...data }
+
+      if (data.password) {
+        const isSamePassword = await bcrypt.compare(data.password, existingUser.password ?? '')
+        if(!isSamePassword) {
+          const hashedPassword = await bcrypt.hash(data.password, 10)
+          updateData.password = hashedPassword
+        }else{
+          delete updateData.password
+        }
+      }
+      const user = await prismaClient.user.update({
+        where: { id: userId },
+        data: {
+          ...updateData,
+        },
+      })
+
+      if (!user) {
+        throw {
+          message: "Usuario não encontrado",
+          statusCode: 404,
+        };
+      }
+
+
+      return user
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (
+          error.code === "P2002" &&
+          error.meta?.target === "User_document_key"
+        ) {
+          throw {
+            message: "Já existe uma conta com esse documento!",
+            statusCode: 409,
+          };
+        }
+      }
+      console.log(error);
+      throw {
+        message: "Falhou ao encontrar a conta!",
+        statusCode: 500,
+        details: error,
+      };
+    }
+  };
+
+  deleteUser: AppUserService.deleteUser.Handler = async ({ userId }) => {
+    try {
+      const user = await prismaClient.user.delete({
+        where: { id: userId },
+      })
+
+      if (!user) {
+        throw {
+          message: "Usuario não encontrado",
+          statusCode: 404,
+        };
+      }
+
+     
+      return user
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (
+          error.code === "P2002" &&
+          error.meta?.target === "User_document_key"
+        ) {
+          throw {
+            message: "Já existe uma conta com esse documento!",
+            statusCode: 409,
+          };
+        }
+      }
+      console.log(error);
+      throw {
+        message: "Falhou ao encontrar a conta!",
+        statusCode: 500,
+        details: error,
+      };
+    }
+  };
+
+
   login: AppUserService.Login.Handler = async ({ email, password }) => {
     try {
       const user = await prismaClient.user.findFirst({

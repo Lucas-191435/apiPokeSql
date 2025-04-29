@@ -31,18 +31,12 @@ routes.get("/user/:userId", valideteUserToken, (req: Request, res: Response) =>
   userController.getUser(req, res)
 );
 
-// routes.get(
-//   "/userByToken",
-//   valideteAccountToken,
-//   (req: Request, res: Response) => userController.userByToken(req, res)
-// );
+routes.put("/user/:userId", valideteUserToken, (req: Request, res: Response) =>
+  userController.updateUser(req, res)
+);
 
-// routes.post("/loginUserFistStep", (req: Request, res: Response) =>
-//   userController.loginUserFistStep(req, res)
-// );
-
-// routes.post("/loginUserSecondStep", (req: Request, res: Response) =>
-//   userController.loginUserSecondStep(req, res)
-// );
+routes.delete("/user/:userId", valideteUserToken, (req: Request, res: Response) =>
+  userController.deleteUser(req, res)
+);
 
 export default routes;
