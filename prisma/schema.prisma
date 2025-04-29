@@ -66,7 +66,8 @@ model User {
   oauthId    String?  @unique 
   oauthProvider String? 
   oauthProfileUrl String?
-
+  resetToken String? @unique
+  resetTokenExpiry DateTime?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 

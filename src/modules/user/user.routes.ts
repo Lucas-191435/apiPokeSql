@@ -5,6 +5,7 @@ import { validateRequest } from "../../middlewares/validateRequest";
 import multer from "multer"
 import {
   createUserSchema,
+  resetPasswordSchema,
 } from "./user.schema";
 import multerConfig from "../../config/multerConfig";
 import upload from "../../config/multerImgConfig";
@@ -17,7 +18,6 @@ const routes = Router();
 const userController = new AccountController();
 
 const router = Router()
-// const upload = multer(multerConfig)
 routes.post("/user", upload.array('avatarProfile',2), (req: Request, res: Response) =>
   { console.log(req.files);
     userController.create(req, res)}
@@ -37,6 +37,10 @@ routes.put("/user/:userId", valideteUserToken, (req: Request, res: Response) =>
 
 routes.delete("/user/:userId", valideteUserToken, (req: Request, res: Response) =>
   userController.deleteUser(req, res)
+);
+
+routes.post("/user/resetPassword", validateRequest(resetPasswordSchema), (req: Request, res: Response) =>
+  userController.resetPassword(req, res)
 );
 
 export default routes;

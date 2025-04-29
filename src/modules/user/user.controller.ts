@@ -144,6 +144,23 @@ class AccountController {
         .json({ message: err.message, details: err.details });
     }
   }
+
+  async resetPassword(req: Request, res: Response): Promise<Response> {
+    try {
+     
+      console.log("req.body", req.body);
+
+
+      return res
+        .status(200)
+        .json({ message: "Reset password enviado."});
+    } catch (error) {
+      const err = error as IError;
+      return res
+        .status(err.statusCode || 500)
+        .json({ message: err.message, details: err.details });
+    }
+  }
 }
 
 export default AccountController;

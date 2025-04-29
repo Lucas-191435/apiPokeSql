@@ -261,6 +261,25 @@ class UserService implements AppUserService.IUserService {
       };
     }
   };
+
+  resetPassword: AppUserService.ResetPassword.Handler = async ({ email }) => {
+    try {
+      const user = await prismaClient.user.findFirst({
+        where: { email: email },
+      })
+
+      return null
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      
+      }
+      throw {
+        message: "Falhou ao enviar email!",
+        statusCode: 500,
+        details: error,
+      };
+    }
+  };
 }
 
 export default UserService;

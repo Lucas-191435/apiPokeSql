@@ -27,7 +27,15 @@ const createUserSchema = yup.object().shape({
       ),
   });
 
+
+  const resetPasswordSchema = yup.object({
+    email: yup
+      .string().email('Verifique o email')
+      .required("Email é um campo obrigatório.")
+  }).noUnknown(true, 'Campos extras não são permitidos');;
+
   export {
     createUserSchema,
+    resetPasswordSchema
   };
   

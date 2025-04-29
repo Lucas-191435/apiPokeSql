@@ -78,6 +78,16 @@ export namespace AppUserService {
     export type Handler = ServiceFn<Args, Promise<Result>>;
   }
 
+  export namespace ResetPassword {
+    export type Args = {
+      email: string,
+    };
+    export type Result =
+      | null
+      | IError;
+    export type Handler = ServiceFn<Args, Promise<Result>>;
+  }
+
   export interface IUserService {
 
     create: AppUserService.Create.Handler;
