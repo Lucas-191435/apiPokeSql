@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import AccountService from "./user.service";
 import { IError } from "../../types/generics";
-;
+import { InferType } from 'yup';
+import { resetPasswordSchema, validateTokenForResetPasswordSchema } from "./user.schema";
 
 class AccountController {
   private userService: AccountService;
@@ -19,13 +20,13 @@ class AccountController {
 
       return res
         .status(200)
-        .json({ message: "Conta adicionada.", data: user });
-    } catch (error) {
-      const err = error as IError;
-      return res
-        .status(err.statusCode || 500)
-        .json({ message: err.message, details: err.details });
-    }
+        .json({ message: "Conta adicionada.", user });
+      } catch (error) {
+        const err = error as IError;
+        return res
+          .status(err.statusCode || 500)
+          .json(error);
+      }
   }
 
 
@@ -116,7 +117,7 @@ class AccountController {
   async login(req: Request, res: Response): Promise<Response> {
     try {
      
-      console.log("req.body", req.body);
+      console.log("req.body aaa", req.body);
       // console.log('req.file',req.file);
       const {email,
         password} = req.body;
@@ -139,6 +140,7 @@ class AccountController {
         } });
     } catch (error) {
       const err = error as IError;
+      console.log("error", error);
       return res
         .status(err.statusCode || 500)
         .json({ message: err.message, details: err.details });
@@ -147,13 +149,33 @@ class AccountController {
 
   async resetPassword(req: Request, res: Response): Promise<Response> {
     try {
-     
-      console.log("req.body", req.body);
+      const {email} = req.body as InferType<typeof resetPasswordSchema>;
 
+      const data = await this.userService.resetPassword({
+        email
+      });
 
       return res
         .status(200)
-        .json({ message: "Reset password enviado."});
+        .json({ message: "Reset password enviado.", data});
+    } catch (error) {
+      const err = error as IError;
+      return res
+        .status(err.statusCode || 500)
+        .json({ message: err.message, details: err.details });
+    }
+  }
+
+
+  async validateTokenForResetPassword(req: Request, res: Response): Promise<Response> {
+    try {
+      const body = req.body as InferType<typeof validateTokenForResetPasswordSchema>;
+
+      const data = await this.userService.validateTokenForResetPassword(body);
+
+      return res
+        .status(200)
+        .json({ message: "Senha alterada"});
     } catch (error) {
       const err = error as IError;
       return res

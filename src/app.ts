@@ -7,8 +7,8 @@ const app = express()
 console.log('Diretório estático configurado para:', path.resolve(__dirname, '..', 'tmp'));
 
 app.use(cors({
-  origin: (process.env.WEB_URL as string).split(";"),
-}))
+  origin: 'http://localhost:3000',
+}));
 
 app.use(json())
 app.use(urlencoded({ extended: true }))

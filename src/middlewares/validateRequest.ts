@@ -6,7 +6,8 @@ const validateRequest =
   async (req: Request, res: Response, next: NextFunction) => {
     const { body } = req;
     try {
-      const validated = await schema.validate(body, { stripUnknown: true });
+      const validated = await schema.validate(body, { stripUnknown: true })
+
       req.body = validated;
       return next();
     } catch (error) {

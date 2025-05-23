@@ -32,10 +32,19 @@ const createUserSchema = yup.object().shape({
     email: yup
       .string().email('Verifique o email')
       .required("Email é um campo obrigatório.")
-  }).noUnknown(true, 'Campos extras não são permitidos');;
+  }).noUnknown(true, 'Campos extras não são permitidos');
+
+  const validateTokenForResetPasswordSchema = yup.object({
+    password: yup
+      .string()
+      .required("password é um campo obrigatório."),
+    validatePassword: yup.string().required('Confirmação de senha é obrigatória.').oneOf([yup.ref('password')], 'As senhas não conferem.'),
+    token: yup.string().required("token é um campo obrigatório."),
+  }).noUnknown(true, 'Campos extras não são permitidos');
 
   export {
     createUserSchema,
+    validateTokenForResetPasswordSchema,
     resetPasswordSchema
   };
   

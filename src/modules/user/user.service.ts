@@ -3,13 +3,13 @@ import prismaClient from "../../database/index";
 import { AppUserService } from "../../interfaces/IUserService";
 import { JsonWebTokenError, sign } from "jsonwebtoken";
 import { saveImages } from "../../utils/saveImg";
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 import authConfig from "../../config/authConfig";
 JsonWebTokenError;
 class UserService implements AppUserService.IUserService {
   create: AppUserService.Create.Handler = async ({ data, files }) => {
     try {
-      console.log(data.email);
       if (!data.email) {
         throw {
           message: "Email não foi enviado ou é inválido!",
@@ -21,7 +21,6 @@ class UserService implements AppUserService.IUserService {
         where: { email: data.email },
       });
 
-      console.log(userAlreadyExists)
       if (userAlreadyExists) {
         throw {
           message: "Já existe um usuário com esse email!",
@@ -41,7 +40,6 @@ class UserService implements AppUserService.IUserService {
 
       // Só salva a imagem se o usuário foi criado com sucesso
       if (files && files.length > 0) {
-        console.log('Entrou pra criar com múltiplos arquivos')
 
         const fileNames = await saveImages(files, user.id)
 
@@ -50,28 +48,21 @@ class UserService implements AppUserService.IUserService {
           data: { avatar: JSON.stringify(fileNames) } // Salvando como JSON no banco
         })
 
-        return updatedUser
-      }
-
-      return user;
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (
-          error.code === "P2002" &&
-          error.meta?.target === "User_document_key"
-        ) {
-          throw {
-            message: "Já existe uma conta com esse documento!",
-            statusCode: 409,
-          };
+        return {
+            name: updatedUser.name,
+            email: updatedUser.email,
+            avatar: updatedUser.avatar,
         }
       }
-      console.log(error);
-      throw {
-        message: "Falhou ao criar a conta!",
-        statusCode: 500,
-        details: error,
+
+      return {
+          name: user.name,
+          email: user.email,
+          avatar: user.avatar,
       };
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
   };
 
@@ -242,23 +233,7 @@ class UserService implements AppUserService.IUserService {
         }, token: token
       }
     } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (
-          error.code === "P2002" &&
-          error.meta?.target === "User_document_key"
-        ) {
-          throw {
-            message: "Já existe uma conta com esse documento!",
-            statusCode: 409,
-          };
-        }
-      }
-      console.log(error);
-      throw {
-        message: "Falhou ao encontrar a conta!",
-        statusCode: 500,
-        details: error,
-      };
+      throw error;
     }
   };
 
@@ -268,7 +243,67 @@ class UserService implements AppUserService.IUserService {
         where: { email: email },
       })
 
-      return null
+      if (!user) {
+        throw {
+          message: "Usuario não encontrado",
+          statusCode: 404,
+        };
+      }
+     
+      const token = crypto.randomBytes(32).toString("hex");
+      const expires = new Date(Date.now() + 1000 * 60 * 30); // 30 min
+
+
+      await prismaClient.user.update({
+        where: { email },
+        data: {
+          resetToken: token,
+          resetTokenExpiry: expires,
+        },
+      });
+
+      return token
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      
+      }
+      throw {
+        message: "Falhou ao enviar email!",
+        statusCode: 500,
+        details: error,
+      };
+    }
+  };
+
+  validateTokenForResetPassword: AppUserService.ValidateTokenForResetPassword.Handler = async ({ password, token }) => {
+    try {
+      const user = await prismaClient.user.findFirst({
+        where: {
+          resetToken: token,
+          resetTokenExpiry: {
+            gte: new Date(),
+          },
+        },
+      })
+
+      if(!user){
+        throw {
+          message: "Token inválido ou expirado",
+          statusCode: 400,
+        }
+      }
+      
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      await prismaClient.user.update({
+        where: {id: user.id},
+        data: {
+          password: hashedPassword,
+          resetToken: null,
+          resetTokenExpiry: null,
+        }
+      })
+      return token
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
       

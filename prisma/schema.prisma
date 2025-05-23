@@ -55,21 +55,46 @@ enum Role {
   CLIENT
 }
 
+enum Region {
+  KANTO
+  JOHTO
+  HOENN
+  SINNOH
+  UNOVA
+}
+
 model User {
-  id         String   @id @default(uuid()) 
-  email      String   @unique
-  password   String?
-  role       Role     @default(CLIENT)
-  name       String
-  avatar     String?
-  birthday   DateTime?
-  oauthId    String?  @unique 
-  oauthProvider String? 
-  oauthProfileUrl String?
-  resetToken String? @unique
+  id               String    @id @default(uuid())
+  email            String    @unique
+  password         String?
+  role             Role      @default(CLIENT)
+  name             String
+  avatar           String?
+  birthday         DateTime?
+  oauthId          String?   @unique
+  oauthProvider    String?
+  oauthProfileUrl  String?
+  resetToken       String?   @unique
   resetTokenExpiry DateTime?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
   @@map("users") // Nome da tabela no banco de dados
+}
+
+model Pokemon {
+  id        String   @id @default(uuid())
+  pokeId    String   @unique
+  name      String   @unique
+  img1      String?
+  img2      String?
+  types     String?
+  abilities String?
+  height    Float @default(0)
+  weight    Float @default(0)
+  region    Region   @default(KANTO)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("Pokemon") // Nome da tabela no banco de dados
 }

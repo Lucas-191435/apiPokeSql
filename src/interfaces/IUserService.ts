@@ -1,5 +1,7 @@
 import { User } from "@prisma/client";
 import { GetAllArgs, IError, ServiceFn, TRows } from "../types/generics";
+import { InferType } from "yup";
+import { validateTokenForResetPasswordSchema } from "../modules/user/user.schema";
 
 export namespace AppUserService {
   export namespace GetAllUserDTO {
@@ -26,7 +28,7 @@ export namespace AppUserService {
       };
       files?: any;
     };
-    export type Result = User | IError;
+    export type Result =  Pick<User, 'name' | 'email' | 'avatar'> | IError;
     export type Handler = ServiceFn<Args, Promise<Result>>;
   }
 
@@ -82,7 +84,15 @@ export namespace AppUserService {
     export type Args = {
       email: string,
     };
-    export type Result =
+    export type Result = String
+      | null
+      | IError;
+    export type Handler = ServiceFn<Args, Promise<Result>>;
+  }
+
+  export namespace ValidateTokenForResetPassword {
+    export type Args = InferType<typeof validateTokenForResetPasswordSchema>;
+    export type Result = String
       | null
       | IError;
     export type Handler = ServiceFn<Args, Promise<Result>>;
