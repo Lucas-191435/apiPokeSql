@@ -26,7 +26,7 @@ type Version =
     | 'soulsilver'
     | 'black'
     | 'white'
-    | 'black-2'
+    | 'black-white'
     | 'white-2'
     | 'x'
     | 'y'
@@ -146,6 +146,16 @@ type IPokemonPokeAPi = {
             versions: {
                 [gen in Generation]?: {
                     [ver in Version]?: {
+                        animated?: {
+                            back_default: string | null;
+                            back_female: string | null;
+                            back_shiny: string | null;
+                            back_shiny_female: string | null;
+                            front_default: string | null;
+                            front_female: string | null;
+                            front_shiny: string | null;
+                            front_shiny_female: string | null;
+                        },
                         back_default: string | null;
                         back_female: string | null;
                         back_shiny: string | null;

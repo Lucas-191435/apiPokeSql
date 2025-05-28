@@ -1,5 +1,6 @@
 import { User } from "@prisma/client";
 import { GetAllArgs, IError, ServiceFn, TRows } from "../types/generics";
+import { IPokemon } from "../modules/pokemon/pokeApi.service";
 
 export namespace PokeAPIService {
   export namespace GetPokemon {
@@ -8,7 +9,7 @@ export namespace PokeAPIService {
       offset: number;
       final: number;
     };
-    export type Result = {message: string} | IError
+    export type Result = IPokemon[] | IError
     ;
     export type Handler = ServiceFn<Args, Promise<Result>>;
   }

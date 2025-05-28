@@ -1,6 +1,7 @@
+import { sinnoh } from './../../utils/pokedexs/sinnoh';
 import { Request, Response } from "express";
 import PokemonService from "./pokemon.service";
-import PokeAPIService from "./pokeApi.service";
+import PokeAPIService, { IPokemon } from "./pokeApi.service";
 class PokemonController {
     private pokemonService: PokemonService;
     private pokeAPIService: PokeAPIService;
@@ -23,16 +24,87 @@ class PokemonController {
         try {
             console.log("insertPokemonInDataBase");
 
-            const poke = await this.pokeAPIService.getPokemons({
+            const kanto = await this.pokeAPIService.getPokemons({
                 offset: 0,
-                limit: 5,
+                limit: 151,
                 final: 2,
             });
 
-            const lista = await this.pokemonService.insertPokemonInDataBase({
-                userId: 'req.user.id',
+            const johto = await this.pokeAPIService.getPokemons({
+                offset: 151,
+                limit: 100,
+                final: 2,
             });
-            return res.status(200).json({ message: "GetPokemons" });
+
+            const hoenn = await this.pokeAPIService.getPokemons({
+                offset: 251,
+                limit: 135,
+                final: 2,
+            });
+
+            const sinnoh = await this.pokeAPIService.getPokemons({
+                offset: 386,
+                limit: 108,
+                final: 2,
+            });
+
+            const unova = await this.pokeAPIService.getPokemons({
+                offset: 494,
+                limit: 155,
+                final: 2,
+            });
+
+            if ('message' in kanto) {
+                console.error(kanto.message);
+                throw new Error(kanto.message);
+            }
+            if ('message' in johto) {
+                console.error(johto.message);
+                throw new Error(johto.message);
+            }
+            if ('message' in hoenn) {
+                console.error(hoenn.message);
+                throw new Error(hoenn.message);
+            }
+            if ('message' in sinnoh) {
+                console.error(sinnoh.message);
+                throw new Error(sinnoh.message);
+            }
+            if ('message' in unova) {
+                console.error(unova.message);
+                throw new Error(unova.message);
+            }
+
+            const kantO = await this.pokemonService.insertPokemonInDataBase({
+                pokedex: kanto,
+            });
+
+            const johtO = await this.pokemonService.insertPokemonInDataBase({
+                pokedex: johto,
+            });
+
+            const hoenN = await this.pokemonService.insertPokemonInDataBase({
+                pokedex: hoenn,
+            });
+            const sinnoH = await this.pokemonService.insertPokemonInDataBase({
+                pokedex: sinnoh,
+            });
+
+            const unovaN = await this.pokemonService.insertPokemonInDataBase({
+                pokedex: unova,
+            });
+
+
+            return res.status(200).json({
+                message: "GetPokemons",
+                poke: [
+                    kanto,
+                    johto,
+                    hoenn,
+                    sinnoh,
+                    unova
+                ]
+            });
         } catch (error) {
             return res
                 .status(500)
