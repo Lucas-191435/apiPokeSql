@@ -5,37 +5,54 @@ import prismaClient from "../../database";
 import { transformPokemonData } from "../../utils/utils";
 
 class PokemonService implements AppPokemonService.IPokemonService {
-    getPokemons: AppPokemonService.GetPokemons.Handler = async ({page, pageSize }) => {
+    getPokemons: AppPokemonService.GetPokemons.Handler = async ({ page, pageSize, query }) => {
         try {
+            const conditions: Array<Record<string, any>> = [];
+            if (query) {
+                conditions.push({
+                    OR: [
+                        {
+                            name: {
+                                contains: query,
+                                mode: 'insensitive'
+                            }
+                        },
+                    ],
+                });
+            }
+
+            const where: Prisma.PokemonFindManyArgs["where"] = {
+                AND: conditions.length > 0 ? conditions : undefined,
+            };
 
             const pokes = await prismaClient.pokemon.findMany({
                 orderBy: {
                     pokeId: 'asc',
                 },
+                where,
                 skip: ((page ?? 1) - 1) * (pageSize ?? 20),
                 take: pageSize ?? 20,
-                // select: {
-                //     pokeId: true,
-                //     name: true,
-                //     types: true,
-                //     abilities: true,
-                //     region: true,
-                //     height: true,
-                //     weight: true,
-                //     img1: true,
-                //     img2: true,
-                //     img3: true,
-                // }
+            });
+            const pokesCount = await prismaClient.pokemon.count({
+                where: {
+                    ...(query && {
+                        OR: [
+                            { name: { contains: query } },
+                        ],
+                    }),
+                },
             });
 
             const pokedex = pokes.map((pokemon) => {
-
                 return transformPokemonData(pokemon);
             });
 
-            console.log(pokedex);
-            return pokedex
+            return {
+                count: pokesCount,
+                pokemon: pokedex
+            }
         } catch (error) {
+            console.error("Error fetching pokemons:", error);
             throw error
         }
     }
@@ -63,7 +80,7 @@ class PokemonService implements AppPokemonService.IPokemonService {
                 data: transformedPokedex,
             });
 
-            
+
             return pokedex
         } catch (error) {
             throw error

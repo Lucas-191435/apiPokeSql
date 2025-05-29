@@ -1,7 +1,7 @@
 export type GetAllArgs<T> = {
     page?: number;
     pageSize?: number;
-    query: string;
+    query?: string;
     orderBy?: string;
     direction?: string;
     id?: string;
