@@ -5,7 +5,7 @@ export type GetAllArgs<T> = {
     orderBy?: string;
     direction?: string;
     id?: string;
-  };
+  } & T;
 
 
   export type TRows<T> = {

@@ -7,7 +7,7 @@ import PokemonController from "./pokemon.controller";
 const pokemonController = new PokemonController();
 
 routes.get("/pokemon", (req: Request, res: Response) => {
-    return res.status(200).json({ message: "GetPokemons" });
+    pokemonController.getPokemons(req, res)
 });
 
 

@@ -2,13 +2,39 @@ import { AppPokemonService } from "../../interfaces/IPokemon";
 import { Prisma, Pokemon, Region } from "@prisma/client";
 import { IError } from "../../types/generics";
 import prismaClient from "../../database";
+import { transformPokemonData } from "../../utils/utils";
 
 class PokemonService implements AppPokemonService.IPokemonService {
-    getPokemons: AppPokemonService.GetPokemons.Handler = async ({ }) => {
+    getPokemons: AppPokemonService.GetPokemons.Handler = async ({page, pageSize }) => {
         try {
-            return {
-                message: "Pokemons"
-            }
+
+            const pokes = await prismaClient.pokemon.findMany({
+                orderBy: {
+                    pokeId: 'asc',
+                },
+                skip: ((page ?? 1) - 1) * (pageSize ?? 20),
+                take: pageSize ?? 20,
+                // select: {
+                //     pokeId: true,
+                //     name: true,
+                //     types: true,
+                //     abilities: true,
+                //     region: true,
+                //     height: true,
+                //     weight: true,
+                //     img1: true,
+                //     img2: true,
+                //     img3: true,
+                // }
+            });
+
+            const pokedex = pokes.map((pokemon) => {
+
+                return transformPokemonData(pokemon);
+            });
+
+            console.log(pokedex);
+            return pokedex
         } catch (error) {
             throw error
         }
@@ -33,42 +59,12 @@ class PokemonService implements AppPokemonService.IPokemonService {
                     updatedAt: new Date(), // opcional, pois o schema já usa @updatedAt
                 };
             });
-            const aaa = await prismaClient.pokemon.createMany({
+            const insert = await prismaClient.pokemon.createMany({
                 data: transformedPokedex,
             });
 
-            // const user = await prismaClient.pokemon.create({
-            //  data: {
-            //     pokeId: 3,
-            //     name: "venusaur",
-            //     types: JSON.stringify(["grass", "poison"]),
-            //     abilities: JSON.stringify(["overgrow", "chlorophyll"]),
-            //     region: "KANTO",
-            //     height: 20,
-            //     weight: 1000,
-            //     img1: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/3.gif",
-            //     img2: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png",
-            //     img3: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png"
-            //  }
-            // });
-            return [{
-                number: 3,
-                name: "venusaur",
-                types: [
-                    "grass",
-                    "poison"
-                ],
-                abilities: [
-                    "overgrow",
-                    "chlorophyll"
-                ],
-                region: "Kanto",
-                height: 20,
-                weight: 1000,
-                img1: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/3.gif",
-                img2: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png",
-                img3: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png"
-            }]
+            
+            return pokedex
         } catch (error) {
             throw error
         }

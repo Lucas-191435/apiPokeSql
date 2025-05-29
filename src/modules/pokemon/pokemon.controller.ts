@@ -12,7 +12,16 @@ class PokemonController {
 
     async getPokemons(req: Request, res: Response): Promise<Response> {
         try {
-            return res.status(200).json({ message: "GetPokemons" });
+            const pokedex = await this.pokemonService.getPokemons({
+                userId: "teste",
+                query: "search",
+                page: 1,
+                orderBy: "pokeId",
+                direction: "asc",
+                pageSize: 20,
+            });
+
+            return res.status(200).json({ message: "GetPokemonsaa", pokedex });
         } catch (error) {
             return res
                 .status(500)
@@ -22,8 +31,6 @@ class PokemonController {
 
     async insertPokemonInDataBase(req: Request, res: Response): Promise<Response> {
         try {
-            console.log("insertPokemonInDataBase");
-
             const kanto = await this.pokeAPIService.getPokemons({
                 offset: 0,
                 limit: 151,

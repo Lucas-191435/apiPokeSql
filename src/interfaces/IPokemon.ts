@@ -7,7 +7,8 @@ export namespace AppPokemonService {
     export type Args = GetAllArgs<{
       userId: string;
     }>;
-    export type Result = { message: string } | IError
+    export type Result = IPokemon[] | IError
+    //  export type Result = { message: string } | IError
       ;
     export type Handler = ServiceFn<Args, Promise<Result>>;
   }
