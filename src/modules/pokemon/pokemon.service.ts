@@ -7,14 +7,14 @@ import { transformPokemonData } from "../../utils/utils";
 class PokemonService implements AppPokemonService.IPokemonService {
     getPokemons: AppPokemonService.GetPokemons.Handler = async ({ page, pageSize, query }) => {
         try {
+            console.log("Fetching pokemons with query:", query, "page:", page, "pageSize:", pageSize);
             const conditions: Array<Record<string, any>> = [];
             if (query) {
                 conditions.push({
                     OR: [
                         {
                             name: {
-                                contains: query,
-                                mode: 'insensitive'
+                                contains: `${query}`,
                             }
                         },
                     ],

@@ -20,10 +20,10 @@ class PokemonController {
                 page: page ? parseInt(page as string) : 1, 
                 orderBy: "pokeId",
                 direction: "asc",
-                pageSize: pageSize ? parseInt(pageSize as string) : 20,
+                pageSize: pageSize ? parseInt(pageSize as string) : 30,
             });
 
-            return res.status(200).json({ message: "GetPokemonsaa", pokedex });
+            return res.status(200).json(pokedex);
         } catch (error) {
             return res
                 .status(500)
