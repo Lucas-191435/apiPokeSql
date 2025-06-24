@@ -5,7 +5,7 @@ import prismaClient from "../../database";
 import { transformPokemonData } from "../../utils/utils";
 
 class PokemonService implements AppPokemonService.IPokemonService {
-    getPokemons: AppPokemonService.GetPokemons.Handler = async ({ page, pageSize, query }) => {
+    getPokemons: AppPokemonService.GetPokemons.Handler = async ({ page, pageSize, query, types, weight }) => {
         try {
             console.log("Fetching pokemons with query:", query, "page:", page, "pageSize:", pageSize);
             const conditions: Array<Record<string, any>> = [];
@@ -21,6 +21,43 @@ class PokemonService implements AppPokemonService.IPokemonService {
                 });
             }
 
+            if (types && types.length > 0) {
+                conditions.push({
+                    OR: types.map((type) => ({
+                        types: {
+                            contains: type,
+                        },
+                    })),
+                });
+            }
+
+            if (weight) {
+                if (weight === 'small') {
+                    conditions.push({
+                        weight: {
+                            gte: 0,
+                            lte: 300,
+                        }
+                    });
+                } else if (weight === 'medium') {
+                    conditions.push({
+                        weight: {
+                            gte: 300,
+                            lte: 850,
+                        }
+                    });
+                } else if (weight === 'large') {
+                    conditions.push({
+                        weight: {
+                            gte: 850,
+                            // lte: 900,
+                        }
+                    });
+                }
+            }
+
+            console.log("Conditions for query:", JSON.stringify(conditions, null, 2))
+
             const where: Prisma.PokemonFindManyArgs["where"] = {
                 AND: conditions.length > 0 ? conditions : undefined,
             };
@@ -33,15 +70,8 @@ class PokemonService implements AppPokemonService.IPokemonService {
                 skip: ((page ?? 1) - 1) * (pageSize ?? 20),
                 take: pageSize ?? 20,
             });
-            const pokesCount = await prismaClient.pokemon.count({
-                where: {
-                    ...(query && {
-                        OR: [
-                            { name: { contains: query } },
-                        ],
-                    }),
-                },
-            });
+
+            const pokesCount = await prismaClient.pokemon.count({ where });
 
             const pokedex = pokes.map((pokemon) => {
                 return transformPokemonData(pokemon);
@@ -64,16 +94,16 @@ class PokemonService implements AppPokemonService.IPokemonService {
                 return {
                     pokeId: pokemon.number,
                     name: pokemon.name,
-                    types: JSON.stringify(pokemon.types), // ou pokemon.types.join(',') se preferir
+                    types: JSON.stringify(pokemon.types),
                     abilities: JSON.stringify(pokemon.abilities),
-                    region: pokemon.region as Region, // certifique-se que seja um valor válido
+                    region: pokemon.region as Region,
                     height: pokemon.height,
                     weight: pokemon.weight,
                     img1: pokemon.img1 || null,
                     img2: pokemon.img2 || null,
                     img3: pokemon.img3 || null,
-                    createdAt: new Date(), // opcional, pois o schema já usa default(now())
-                    updatedAt: new Date(), // opcional, pois o schema já usa @updatedAt
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
                 };
             });
             const insert = await prismaClient.pokemon.createMany({

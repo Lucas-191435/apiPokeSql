@@ -12,19 +12,23 @@ class PokemonController {
 
     async getPokemons(req: Request, res: Response): Promise<Response> {
         try {
-            const { page, pageSize, query } = req.query;
+            const { page, pageSize, query, types, weight } = req.query;
             console.log("Page:", page, "PageSize:", pageSize);
+            console.log("Query:", types);
             const pokedex = await this.pokemonService.getPokemons({
                 userId: "teste",
+                types: types ? (types as string[]) : undefined,
                 query: query ? (query as string) : undefined,
-                page: page ? parseInt(page as string) : 1, 
+                page: page ? parseInt(page as string) : 1,
                 orderBy: "pokeId",
                 direction: "asc",
                 pageSize: pageSize ? parseInt(pageSize as string) : 30,
+                weight: weight ? (weight as 'small' | 'medium' | 'large') : undefined,
             });
 
             return res.status(200).json(pokedex);
         } catch (error) {
+            console.error("Error in getPokemons:", error);
             return res
                 .status(500)
                 .json(error);

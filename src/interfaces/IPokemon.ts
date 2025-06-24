@@ -6,6 +6,8 @@ export namespace AppPokemonService {
   export namespace GetPokemons {
     export type Args = GetAllArgs<{
       userId: string;
+      types?: string[];
+      weight?: 'small' | 'medium' | 'large';
     }>;
     export type Result = {
       count: number;
