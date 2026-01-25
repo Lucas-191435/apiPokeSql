@@ -4,6 +4,12 @@ import { IError } from "../../types/generics";
 import prismaClient from "../../database";
 import { transformPokemonData } from "../../utils/utils";
 
+const createError = (message: string, status: number) => {
+    const error = new Error(message);
+    (error as any).statusCode = status;
+    return error;
+};
+
 class PokemonService implements AppPokemonService.IPokemonService {
     getPokemons: AppPokemonService.GetPokemons.Handler = async ({ page, pageSize, query, types, weight }) => {
         try {
@@ -106,11 +112,11 @@ class PokemonService implements AppPokemonService.IPokemonService {
             });
 
             if (!pokemon) {
-                throw new Error("Pokémon não encontrado");
+                throw createError("Pokémon não encontrado", 404);
             }
 
             const pk = transformPokemonData(pokemon);
-            return pk 
+            return pk
 
         } catch (error) {
             console.error("Error fetching pokemons:", error);
