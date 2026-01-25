@@ -87,6 +87,37 @@ class PokemonService implements AppPokemonService.IPokemonService {
         }
     }
 
+    getPokemon: AppPokemonService.GetPokemon.Handler = async (Id) => {
+        try {
+            const value = Id;
+
+            const isNumeric = !isNaN(Number(value));
+            const pokeId = isNumeric ? Number(value) : undefined;
+            const id = !isNumeric ? value : undefined;
+
+            const conditions: Array<Record<string, any>> = [];
+            if (id) conditions.push({ id });
+            if (pokeId !== undefined) conditions.push({ pokeId });
+
+            const pokemon = await prismaClient.pokemon.findFirst({
+                where: {
+                    OR: conditions,
+                },
+            });
+
+            if (!pokemon) {
+                throw new Error("Pokémon não encontrado");
+            }
+
+            const pk = transformPokemonData(pokemon);
+            return pk 
+
+        } catch (error) {
+            console.error("Error fetching pokemons:", error);
+            throw error;
+        }
+    };
+
 
     insertPokemonInDataBase: AppPokemonService.InsertPokemonInDataBase.Handler = async ({ pokedex }) => {
         try {

@@ -6,12 +6,16 @@ const routes = Router();
 import PokemonController from "./pokemon.controller";
 const pokemonController = new PokemonController();
 
-routes.get("/pokemon", (req: Request, res: Response) => {
-    pokemonController.getPokemons(req, res)
+routes.get("/pokemon", valideteUserToken, (req: Request, res: Response) => {
+     pokemonController.getPokemons(req, res)
+});
+
+routes.get("/pokemon/:id", valideteUserToken, (req: Request, res: Response) => {
+    pokemonController.getPokemon(req, res)
 });
 
 
-routes.get("/insertPokemonInDataBase", (req: Request, res: Response) => {
+routes.get("/insertPokemonInDataBase", valideteUserToken, (req: Request, res: Response) => {
     pokemonController.insertPokemonInDataBase(req, res)
 });
 

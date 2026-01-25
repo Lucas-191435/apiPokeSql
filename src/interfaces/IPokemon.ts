@@ -18,6 +18,12 @@ export namespace AppPokemonService {
     export type Handler = ServiceFn<Args, Promise<Result>>;
   }
 
+  export namespace GetPokemon {
+    export type Args =  number | string;
+    export type Result = IPokemon | IError;
+    export type Handler = ServiceFn<Args, Promise<Result>>;
+  }
+
   export namespace InsertPokemonInDataBase {
     export type Args = {
       pokedex: IPokemon[]
@@ -28,6 +34,7 @@ export namespace AppPokemonService {
   }
   export interface IPokemonService {
     getPokemons: AppPokemonService.GetPokemons.Handler;
+    getPokemon: AppPokemonService.GetPokemon.Handler;
     insertPokemonInDataBase: AppPokemonService.InsertPokemonInDataBase.Handler;
   }
 }

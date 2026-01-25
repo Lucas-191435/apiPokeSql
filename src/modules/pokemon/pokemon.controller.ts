@@ -35,6 +35,22 @@ class PokemonController {
         }
     }
 
+    async getPokemon(req: Request, res: Response): Promise<Response> {
+        try {
+            const {id} = req.params
+            const pokemon = await this.pokemonService.getPokemon(id);
+
+            const descriptions = await this.pokeAPIService.pokemonDescription(id);
+
+            return res.status(200).json({...pokemon, descriptions});
+        } catch (error) {
+            console.error("Error in getPokemon:", error);
+            return res
+                .status(500)
+                .json(error);
+        }
+    }
+
     async insertPokemonInDataBase(req: Request, res: Response): Promise<Response> {
         try {
             const kanto = await this.pokeAPIService.getPokemons({

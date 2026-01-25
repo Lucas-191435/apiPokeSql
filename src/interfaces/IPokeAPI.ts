@@ -14,9 +14,20 @@ export namespace PokeAPIService {
     export type Handler = ServiceFn<Args, Promise<Result>>;
   }
 
+  export namespace GetPokemonDescription {
+    export type Args = string;
+    export type Result = {
+      version: string,
+      description: string,
+    }[] | IError
+    ;
+    export type Handler = ServiceFn<Args, Promise<Result>>;
+  }
+
   export interface IPokeAPIService {
 
     getPokemons: PokeAPIService.GetPokemon.Handler;
+    pokemonDescription: PokeAPIService.GetPokemonDescription.Handler;
 
   }
 }
