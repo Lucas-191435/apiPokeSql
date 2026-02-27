@@ -22,7 +22,7 @@ routes.post("/user", upload.array('avatarProfile',2), (req: Request, res: Respon
     userController.create(req, res)
 );
 
-routes.post("/user/login", (req: Request, res: Response) =>
+routes.post("/auth/login", (req: Request, res: Response) =>
     userController.login(req, res)
 );
 
@@ -38,12 +38,12 @@ routes.delete("/user/:userId", valideteUserToken, (req: Request, res: Response) 
   userController.deleteUser(req, res)
 );
 
-routes.post("/user/resetPassword", validateRequest(resetPasswordSchema), (req: Request, res: Response) =>
+routes.post("/auth/resetPassword", validateRequest(resetPasswordSchema), (req: Request, res: Response) =>
   userController.resetPassword(req, res)
 );
 
-routes.post("/user/validateTokenForResetPassword", validateRequest(validateTokenForResetPasswordSchema), (req: Request, res: Response) =>
+routes.post("/auth/validateTokenForResetPassword", validateRequest(validateTokenForResetPasswordSchema), (req: Request, res: Response) =>
   userController.validateTokenForResetPassword(req, res)
-  );
+);
 
 export default routes;

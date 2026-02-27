@@ -3,6 +3,11 @@ import { Request, Response, NextFunction } from 'express';
 
 type AsyncFunction = (req: Request, res: Response, next: NextFunction) => Promise<any>;
 
+/**
+ * Função para tratar funções assíncronas em rotas Express.
+ * Captura erros e envia respostas.
+ * Diminuindo repetição de código em controladores.
+*/
 export const asyncHandler = (fn: AsyncFunction) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
