@@ -10,9 +10,15 @@ class PokemonController {
         this.pokeAPIService = new PokeAPIService();
     }
 
-    async getPokemons(req: Request, res: Response): Promise<Response> {
-        try {
-            const { page, pageSize, query, types, weight } = req.query;
+    async getPokemons(params: {
+        page: string;
+        pageSize: string;
+        query?: string;
+        types?: string[];
+        weight?: 'small' | 'medium' | 'large';
+        userId: string;
+    }) {
+            const { page, pageSize, query, types, weight } = params;
             console.log("Page:", page, "PageSize:", pageSize);
             console.log("Query:", types);
             const pokedex = await this.pokemonService.getPokemons({
@@ -26,13 +32,15 @@ class PokemonController {
                 weight: weight ? (weight as 'small' | 'medium' | 'large') : undefined,
             });
 
-            return res.status(200).json(pokedex);
-        } catch (error) {
-            console.error("Error in getPokemons:", error);
-            return res
-                .status(500)
-                .json(error);
-        }
+            return pokedex
+    }
+
+    async getPokemon({id}: {id: string}){
+            const pokemon = await this.pokemonService.getPokemon(id);
+
+            const descriptions = await this.pokeAPIService.pokemonDescription(id);
+
+            return {...pokemon, descriptions}
     }
 
     async insertPokemonInDataBase(req: Request, res: Response): Promise<Response> {

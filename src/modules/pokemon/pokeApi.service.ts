@@ -1,5 +1,6 @@
 import { PokeAPIService } from "../../interfaces/IPokeAPI";
 import { PokeAPIClient } from "../../services/pokeApiService";
+import IPokemonSpecies from "../../types/pokeAPi/IPokemonSpecies";
 
 export type IPokemon = {
     number: number;
@@ -61,6 +62,23 @@ class PokeAPI implements PokeAPIService.IPokeAPIService {
             throw error;
         }
     };
+
+    pokemonDescription: PokeAPIService.GetPokemonDescription.Handler = async (id) => {
+        const pokemonRes: {
+            status: number,
+            statusText: string,
+            data: IPokemonSpecies
+        } = await PokeAPIClient.get(`pokemon-species/${id}`);
+
+        const descriptions = pokemonRes.data.flavor_text_entries.filter((e) =>e.language.name === 'en').map((e) => {
+            return {
+                version: e.version.name,
+                description: e.flavor_text
+            }
+        });
+
+        return descriptions
+    }
 }
 
 export default PokeAPI;

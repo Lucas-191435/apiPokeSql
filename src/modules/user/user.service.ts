@@ -230,7 +230,8 @@ class UserService implements AppUserService.IUserService {
           email: user.email,
           name: user.name,
           role: user.role,
-        }, token: token
+        }, 
+        token: token
       }
     } catch (error) {
       throw error;

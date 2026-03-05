@@ -4,6 +4,12 @@ import { IError } from "../../types/generics";
 import prismaClient from "../../database";
 import { transformPokemonData } from "../../utils/utils";
 
+const createError = (message: string, status: number) => {
+    const error = new Error(message);
+    (error as any).statusCode = status;
+    return error;
+};
+
 class PokemonService implements AppPokemonService.IPokemonService {
     getPokemons: AppPokemonService.GetPokemons.Handler = async ({ page, pageSize, query, types, weight }) => {
         try {
@@ -86,6 +92,37 @@ class PokemonService implements AppPokemonService.IPokemonService {
             throw error
         }
     }
+
+    getPokemon: AppPokemonService.GetPokemon.Handler = async (Id) => {
+        try {
+            const value = Id;
+
+            const isNumeric = !isNaN(Number(value));
+            const pokeId = isNumeric ? Number(value) : undefined;
+            const id = !isNumeric ? value : undefined;
+
+            const conditions: Array<Record<string, any>> = [];
+            if (id) conditions.push({ id });
+            if (pokeId !== undefined) conditions.push({ pokeId });
+
+            const pokemon = await prismaClient.pokemon.findFirst({
+                where: {
+                    OR: conditions,
+                },
+            });
+
+            if (!pokemon) {
+                throw createError("Pokémon não encontrado", 404);
+            }
+
+            const pk = transformPokemonData(pokemon);
+            return pk
+
+        } catch (error) {
+            console.error("Error fetching pokemons:", error);
+            throw error;
+        }
+    };
 
 
     insertPokemonInDataBase: AppPokemonService.InsertPokemonInDataBase.Handler = async ({ pokedex }) => {

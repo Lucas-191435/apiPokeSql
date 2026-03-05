@@ -1,4 +1,5 @@
 import * as yup from "yup";
+import {InferType} from "yup";
 
 const PokemonSchema = yup.object().shape({
     name: yup
@@ -15,7 +16,7 @@ const PokemonSchema = yup.object().shape({
       .optional()
       .min(2, "O nome impresso no cartão deve possuir no mínimo 2 caracteres.")
       .max(26, "O nome impresso no cartão deve possuir no máximo 26 caracteres.")
-      .matches(
+      .matches( 
         /^[a-zA-Z\s]*$/,
         "O nome impresso no cartão não pode conter acentuação."
       ),
@@ -36,7 +37,9 @@ const PokemonSchema = yup.object().shape({
     customerId: yup.string().required("customerId é um campo obrigatório."),
   });
 
+  const PokemonDto: InferType<typeof PokemonSchema> = {} as any;
   export {
     PokemonSchema,
+    PokemonDto
   };
-  
+     

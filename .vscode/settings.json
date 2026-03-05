@@ -3,6 +3,13 @@
     "window.zoomLevel": 0,
     "debug.console.fontSize": 14,
     "terminal.integrated.fontSize": 12,
+
+    "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.fixAll.eslint": "explicit"
+  },
     "workbench.colorCustomizations": {
       // Define a cor de fundo do item ativo na barra de atividades
       "activityBar.activeBackground": "#58585B",
