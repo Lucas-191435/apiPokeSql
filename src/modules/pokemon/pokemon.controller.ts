@@ -40,7 +40,10 @@ class PokemonController {
 
             const descriptions = await this.pokeAPIService.pokemonDescription(id);
 
-            return {...pokemon, descriptions}
+
+            const pokemonInfos = await this.pokeAPIService.pokemonInfos(id);
+
+            return {...pokemon, ...pokemonInfos}
     }
 
     async insertPokemonInDataBase(req: Request, res: Response): Promise<Response> {
