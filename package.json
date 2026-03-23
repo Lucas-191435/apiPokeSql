@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "tsnd -r dotenv/config -r tsconfig-paths/register --transpile-only --rs --respawn --ignore-watch node_modules src/server.ts",
     "build": "tsc",
-    "start": "node -r dotenv/config ./dist/server.js"
+    "start": "node -r dotenv/config ./dist/server.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "format:src": "prettier --write src/**/*.{ts,js,json}"
   },
   "keywords": [],
   "author": "",
@@ -16,7 +19,9 @@
     "@types/cors": "2.8.13",
     "@types/jsonwebtoken": "9.0.2",
     "@types/node": "^22.5.0",
+    "@types/prettier": "^2.7.3",
     "cz-conventional-changelog": "^3.3.0",
+    "prettier": "^3.8.1",
     "prisma": "^6.8.2",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",

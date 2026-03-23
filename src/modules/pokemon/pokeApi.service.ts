@@ -15,7 +15,7 @@ export type IPokemon = {
     img3: string;
 }
 
-const gerRigion = (number: number) => {
+const getRigion = (number: number) => {
     if (number >= 1 && number <= 151) {
         return "KANTO"
     } else if (number >= 152 && number <= 251) {
@@ -57,7 +57,7 @@ class PokeAPI implements PokeAPIService.IPokeAPIService {
                     name: dados.data.name,
                     types: dados.data.types.map((type) => type.type.name),
                     abilities: dados.data.abilities.map((ability) => ability.ability.name),
-                    region: gerRigion(dados.data.id),
+                    region: getRigion(dados.data.id),
                     height: dados.data.height,
                     weight: dados.data.weight,
                     img1: dados.data.sprites.versions["generation-v"]?.["black-white"]?.animated?.front_default ?? "",
@@ -92,15 +92,32 @@ class PokeAPI implements PokeAPIService.IPokeAPIService {
     }
 
     pokemonInfos: PokeAPIService.GetPokemonInfos.Handler = async (id) => {
-        const pokemonSpecies: {
-            status: number,
-            statusText: string,
-            data: IPokemonSpecies
-        } = await PokeAPIClient.get(`pokemon-species/${id}`);
-
+        const [pokemon, pokemonSpecies]: [
+            {
+                status: number,
+                statusText: string,
+                data: {
+                    stats: {
+                        base_stat: number,
+                        stat: {
+                            name: string;
+                        }
+                    }[]
+                }
+            },
+            {
+                status: number,
+                statusText: string,
+                data: IPokemonSpecies
+            }
+        ] = await Promise.all([
+            PokeAPIClient.get(`pokemon/${id}`),
+            PokeAPIClient.get(`pokemon-species/${id}`)
+        ]);
         let infos: {
             descriptions: {
-                [key: string]: string;
+                version: string,
+                description: string;
             }[],
             evolutionChain: { name: string, id: number, level: number | null }[]
             sprites: {
@@ -123,7 +140,8 @@ class PokeAPI implements PokeAPIService.IPokeAPIService {
         const descriptions = pokemonSpecies.data.flavor_text_entries.filter((e) => e.language.name === 'en').map((e) => {
             infos.regions.push(e.version.name);
             return {
-                [e.version.name]: e.flavor_text
+                version: e.version.name,
+                description: e.flavor_text
             }
         });
 
@@ -170,23 +188,6 @@ class PokeAPI implements PokeAPIService.IPokeAPIService {
                 url: spriteBack(parseInt(id))
             }
         ];
-
-
-        console.log(infos)
-
-        const pokemon: {
-            status: number,
-            statusText: string,
-            data: {
-                stats: {
-                    base_stat: number,
-                    stat: {
-                        name: string;
-                    }
-                }[]
-            }
-        } = await PokeAPIClient.get(`pokemon/${id}`);
-
 
         const stats = pokemon.data.stats.map((stat) => {
             return {

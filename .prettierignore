@@ -1,0 +1,16 @@
+node_modules
+dist
+build
+coverage
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.log
+.git
+.DS_Store
+.vscode
+.nyc_output
+prisma/migrations
+tmp

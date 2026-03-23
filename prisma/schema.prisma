@@ -63,6 +63,23 @@ enum Region {
   UNOVA
 }
 
+enum ItemCategory {
+  pokeballs
+  healing
+  pp_recovery
+  battle_items
+  held_items
+  evolution
+  berries_food
+  machines
+  collectibles
+  key_items
+  mail
+  crafting
+  special_mechanics
+  fossils_and_mining
+}
+
 model User {
   id               String    @id @default(uuid())
   email            String    @unique
@@ -98,4 +115,26 @@ model Pokemon {
   updatedAt DateTime @updatedAt
 
   @@map("Pokemon") // Nome da tabela no banco de dados
+}
+
+model Item {
+  id               String    @id @default(uuid())
+  pokeItemId       Int     @unique
+  pokeCategoryId   Int?
+  name             String
+  sprite           String?
+  category         ItemCategory?
+  description      String?
+  effect           String?
+  isConsumable     Boolean @default(false)
+  isHeldItem       Boolean @default(false)
+  isBattleUse      Boolean @default(false)
+  isDiscardable    Boolean @default(false)
+  isPokemonUse     Boolean @default(false)
+  price            Int?
+
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@map("items") // Nome da tabela no banco de dados
 }

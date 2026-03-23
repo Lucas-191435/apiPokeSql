@@ -28,7 +28,8 @@ export namespace PokeAPIService {
     export type Args = string;
     export type Result = {
             descriptions: {
-                [key: string]: string;
+                version: string,
+                description: string;
             }[],
             evolutionChain:  {name: string, id: number, level: number | null}[],
             regions: string[],

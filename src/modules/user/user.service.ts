@@ -221,7 +221,7 @@ class UserService implements AppUserService.IUserService {
         };
       }
 
-      const token = sign({ id: user.id }, String(authConfig.secret), { expiresIn: '1h', algorithm: "HS512", })
+      const token = sign({ id: user.id }, String(authConfig.secret), { expiresIn: '64h', algorithm: "HS512", })
 
       return {
         user: {
