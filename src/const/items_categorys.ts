@@ -41,7 +41,7 @@ export const itemCategories = [
     { id: 41, name: "data-cards" },
     { id: 42, name: "jewels" },
     { id: 43, name: "miracle-shooter" },
-    
+
     // CATEGORIAS ADICIONADAS APÓS A GEN 5
     //   { id: 44, name: "mega-stones" },
     //   { id: 45, name: "memories" },
@@ -58,53 +58,190 @@ export const itemCategories = [
 ];
 
 
-const ITEM_CATEGORY_GROUPS = {
-    pokeballs: [33, 34, 39],
+export const ITEM_CATEGORY_GROUPS = [
+    {
+        id: 1,
+        name: "misc",
+        itemCategories: [
+            9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 24, 32, 35, 36, 42
+        ]
+    },
+    {
+        id: 2,
+        name: "medicine",
+        itemCategories: [
+            26, 27, 28, 29, 30,
+        ]
+    },
+    {
+        id: 3,
+        name: "pokeballs",
+        itemCategories: [
+            33, 34, 39
+        ]
+    },
 
-    healing: [3, 27, 29, 30, 6, 5],
+    {
+        id: 4,
+        name: "machines",
+        itemCategories: [
+            37
+        ]
+    },
 
-    pp_recovery: [28],
+    {
+        id: 5,
+        name: "berries",
+        itemCategories: [
+            2, 3, 4, 5, 6, 7, 8, 48
+        ]
+    },
 
-    battle_items: [1, 2, 14, 26, 16,
-        // 50
-    ],
+    {
+        id: 6,
+        name: "mail",
+        itemCategories: [
+            25
+        ]
+    },
+    {
+        id: 7,
+        name: "battle",
+        itemCategories: [
+            1, 38, 43
+        ]
+    },
+    {
+        id: 8,
+        name: "key",
+        itemCategories: [
+            20, 21, 22, 23, 40, 41
+        ]
+    },
+];
 
-    held_items: [12, 13, 15, 17, 18, 19, 36,
-        // 45
-    ],
 
-    evolution: [10,
-        // 44, 
-        // 46, 
-        // 49, 
-        // 52
-    ],
+export function mapCategoryToEnum(categoryName: string, categoryId: number): string | null {
+  // Mapeia nomes das categorias da PokéAPI para valores do enum ItemCategory
+  const categoryMapping: Record<string, string> = {
+    // Pokeballs
+    "special-balls": "pokeballs",
+    "standard-balls": "pokeballs",
+    "apricorn-balls": "pokeballs",
+    
+    // Healing
+    "healing": "healing", 
+    "medicine": "healing",
+    "revival": "healing",
+    "status-cures": "healing",
+    "vitamins": "healing",
+    "in-a-pinch": "healing",
+    "picky-healing": "healing",
+    
+    // PP Recovery
+    "pp-recovery": "pp_recovery",
+    
+    // Battle items
+    "stat-boosts": "battle_items",
+    "type-protection": "battle_items",
+    "choice": "battle_items",
+    "effort-training": "battle_items",
+    "training": "battle_items",
+    "flutes": "battle_items",
+    "miracle-shooter": "battle_items",
+    
+    // Held items
+    "held-items": "held_items",
+    "bad-held-items": "held_items",
+    "plates": "held_items",
+    "species-specific": "held_items",
+    "type-enhancement": "held_items",
+    "scarves": "held_items",
+    "jewels": "held_items",
+    
+    // Evolution
+    "evolution": "evolution",
+    
+    // Berries/Food
+    "effort-drop": "berries_food",
+    "baking-only": "berries_food",
+    "catching-bonus": "berries_food",
+    "mulch": "berries_food",
+    "nature-mints": "berries_food",
+    "curry-ingredients": "berries_food",
+    "sandwich-ingredients": "berries_food",
+    "picnic": "berries_food",
+    
+    // Machines
+    "all-machines": "machines",
+    "tm-materials": "machines",
+    
+    // Collectibles
+    "collectibles": "collectibles",
+    "loot": "collectibles",
+    "dex-completion": "collectibles",
+    
+    // Key items
+    "event-items": "key_items",
+    "gameplay": "key_items",
+    "plot-advancement": "key_items",
+    "unused": "key_items",
+    "apricorn-box": "key_items",
+    "data-cards": "key_items",
+    "z-crystals": "key_items",
+    "other": "key_items",
+    
+    // Mail
+    "all-mail": "mail",
+    
+    // Special mechanics (categorias avançadas)
+    "mega-stones": "special_mechanics",
+    "memories": "special_mechanics",
+    "species-candies": "special_mechanics",
+    "dynamax-crystals": "special_mechanics",
+    "tera-shard": "special_mechanics",
+    
+    // Fossils and mining
+    "spelunking": "fossils_and_mining"
+  };
+  
+  return categoryMapping[categoryName] || null;
+}
 
-    berries_food: [8, 32,
-        // 51, 53, 55
-    ],
+export function mapItemAttributes(categoryId: number, attributes: string[]) {
+  const isPokemonUse = [
+    1, 2, 3, 14, 16,
+    26, 27, 28, 29, 30,
+    50
+  ].includes(categoryId);
 
-    machines: [37,
-        // 54
-    ],
+  const isConsumable = [
+    1, 2, 3, 10, 14, 16,
+    26, 27, 28, 29, 30,
+    50,
+    33, 34, 39
+  ].includes(categoryId);
 
-    collectibles: [9, 24, 42],
+  const isHeldItem =
+    [
+      12, 13, 15, 17, 18, 19,
+      36, 42, 44, 45, 46
+    ].includes(categoryId) ||
+    attributes.includes("holdable");
 
-    key_items: [20, 21, 22, 35, 38,
-        // 41
-    ],
+  const isBattleUse =
+    attributes.includes("usable-in-battle");
 
-    mail: [25],
+  const isDiscardable =
+    ![
+      20, 21, 22, 25, 35, 40, 41
+    ].includes(categoryId);
 
-    crafting: [40,
-        // 47
-    ],
-
-    special_mechanics: [43,
-        // 48
-    ],
-
-    fossils_and_mining: [11],
-
-    misc: [4, 23, 31] // (31 não veio na lista mas existe em algumas versões)
+  return {
+    isConsumable,
+    isHeldItem,
+    isBattleUse,
+    isDiscardable,
+    isPokemonUse
+  };
 }

@@ -30,11 +30,14 @@ class ItemService implements AppItemsService.IItemService {
 
     createManyItems: AppItemsService.CreateManyItems.Handler = async (items) => {
         try {
-            console.log("Creating items:", items);
+            console.log("Creating items:", items.length, "items");
 
-            // const createdItems = await prismaClient.item.createMany({
-            //     data: items,
-            // });
+            const createdItems = await prismaClient.item.createMany({
+                data: items,
+                skipDuplicates: true, // Evita erro se item já existir
+            });
+
+            console.log("Successfully created", createdItems.count, "items");
 
         } catch (error) {
             console.error("Error creating items:", error);

@@ -1,37 +1,27 @@
-type ItemCategory = 
-  'pokeballs' | 
-  'healing' |
-  'pp_recovery' |
-  'battle_items' |
-  'held_items' |
-  'evolution' |
-  'berries_food' |
-  'machines' |
-  'collectibles' |
-  'key_items' |
-  'mail' |
-  'crafting' |
-  'special_mechanics' |
-  'fossils_and_mining' ;
+import { ItemCategory } from '@prisma/client';
 
 interface Item {
-  id: number;
+  id: string;  // Alterado de number para string (UUID)
   pokeItemId: number;
   pokeCategoryId: number | null;
+  pokeItemPocketId: number | null;
   name: string;
-  sprite: string;
-  category: ItemCategory | null;
-  description: string;
-  effect: string;
+  sprite: string | null;
+  category: ItemCategory | null;  // Usando enum do Prisma
+  description: string | null;
+  effect: string | null;
   isConsumable: boolean;
   isHeldItem: boolean;
   isBattleUse: boolean;
   isDiscardable: boolean;
   isPokemonUse: boolean;
-  price: number;
+  price: number | null;
+  regions: string | null;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-export type ItemWithoutId = Omit<Item, "id">;
+export type ItemWithoutId = Omit<Item, "id" | "createdAt" | "updatedAt">;
 
 // const a = {
 //   id: 1,

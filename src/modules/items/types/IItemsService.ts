@@ -20,7 +20,7 @@ export namespace AppItemsService {
   }
 
   export namespace CreateManyItems {
-    export type Args = Array<ItemWithoutId>;
+    export type Args = Array<any>;
     export type Handler = ServiceFn<Args, Promise<void>>;
   }
 

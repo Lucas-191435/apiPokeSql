@@ -121,6 +121,7 @@ model Item {
   id               String    @id @default(uuid())
   pokeItemId       Int     @unique
   pokeCategoryId   Int?
+  pokeItemPocketId Int?
   name             String
   sprite           String?
   category         ItemCategory?
@@ -132,6 +133,7 @@ model Item {
   isDiscardable    Boolean @default(false)
   isPokemonUse     Boolean @default(false)
   price            Int?
+  regions           String?
 
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
