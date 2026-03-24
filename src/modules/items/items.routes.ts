@@ -10,12 +10,7 @@ const itemController = new ItemController();
 routes.get("/items",
     valideteUserToken,
     asyncHandler(async (req) => {
-        const { page, pageSize } = req.query as any;
-        
-        return await itemController.getItems({
-            page,
-            pageSize
-        });
+        return await itemController.getItems(req.query as any);
     })
 );
 

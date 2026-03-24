@@ -7,10 +7,7 @@ import { ItemWithoutId } from "./items";
 export namespace AppItemsService {
   export namespace GetAllItems {
     export type Args = GetAllArgs<{
-      name?: string;
-      category?: string;
-      isConsumable?: boolean;
-      isHeldItem?: boolean;
+      pokeItemPocketId?: number;
     }>;
     export type Result = TRows<
       | Item
