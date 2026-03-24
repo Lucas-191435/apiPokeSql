@@ -1,5 +1,6 @@
 import { GetAllArgs, IError, ServiceFn, TRows } from "../../../types/generics";
 import { Item } from "@prisma/client";
+import { ItemWithoutId } from "./items";
 
 
 
@@ -18,8 +19,14 @@ export namespace AppItemsService {
     export type Handler = ServiceFn<Args, Promise<Result>>;
   }
 
+  export namespace CreateManyItems {
+    export type Args = Array<ItemWithoutId>;
+    export type Handler = ServiceFn<Args, Promise<void>>;
+  }
+
 
   export interface IItemService {
     getItems: AppItemsService.GetAllItems.Handler;
+    createManyItems: AppItemsService.CreateManyItems.Handler;
   }
 }

@@ -1,9 +1,26 @@
+type ItemCategory = 
+  'pokeballs' | 
+  'healing' |
+  'pp_recovery' |
+  'battle_items' |
+  'held_items' |
+  'evolution' |
+  'berries_food' |
+  'machines' |
+  'collectibles' |
+  'key_items' |
+  'mail' |
+  'crafting' |
+  'special_mechanics' |
+  'fossils_and_mining' ;
 
 interface Item {
   id: number;
+  pokeItemId: number;
+  pokeCategoryId: number | null;
   name: string;
   sprite: string;
-  category: string;
+  category: ItemCategory | null;
   description: string;
   effect: string;
   isConsumable: boolean;
@@ -13,6 +30,8 @@ interface Item {
   isPokemonUse: boolean;
   price: number;
 }
+
+export type ItemWithoutId = Omit<Item, "id">;
 
 // const a = {
 //   id: 1,
