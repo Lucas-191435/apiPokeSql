@@ -1,6 +1,7 @@
 import { PokeAPIService } from "../../interfaces/IPokeAPI";
 import { PokeAPIClient } from "../../services/pokeApiService";
 import IPokemonSpecies from "../../types/pokeAPi/IPokemonSpecies";
+import logger from "../../utils/logger";
 
 export type IPokemon = {
     number: number;
@@ -92,6 +93,7 @@ class PokeAPI implements PokeAPIService.IPokeAPIService {
     }
 
     pokemonInfos: PokeAPIService.GetPokemonInfos.Handler = async (id) => {
+        logger.info(`Fetching infos for Pokemon ID: ${id}`);
         const [pokemon, pokemonSpecies]: [
             {
                 status: number,
@@ -197,7 +199,7 @@ class PokeAPI implements PokeAPIService.IPokeAPIService {
         });
         infos['stats'] = stats;
 
-        console.log(infos)
+        // console.log(infos)
 
 
         return infos
