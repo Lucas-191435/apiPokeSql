@@ -47,7 +47,7 @@ type Version =
     | 'violet';
 
 
-type IPokemonPokeAPi = {
+export type IPokemonPokeAPi = {
     status: number,
     statusText: string,
     data: {

@@ -1,4 +1,4 @@
-type IGetPokemonPokeAPi = {
+export type IGetPokemonPokeAPi = {
     status: number,
     statusText: string,
     data: {

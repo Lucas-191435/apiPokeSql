@@ -1,6 +1,8 @@
 import { PokeAPIService } from "../../interfaces/IPokeAPI";
 import { PokeAPIClient } from "../../services/pokeApiService";
 import IPokemonSpecies from "../../types/pokeAPi/IPokemonSpecies";
+import { IGetPokemonPokeAPi } from "../../types/pokeAPi/IGetPokemon";
+import { IPokemonPokeAPi } from "../../types/pokeAPi/IPokemonPokeAPI";
 import logger from "../../utils/logger";
 
 export type IPokemon = {
