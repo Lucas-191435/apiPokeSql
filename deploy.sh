@@ -32,7 +32,7 @@ check_docker() {
         error "Docker não está instalado. Instale o Docker primeiro."
     fi
 
-    if ! command -v docker-compose &> /dev/null; then
+    if ! command -v docker compose &> /dev/null; then
         error "Docker Compose não está instalado. Instale o Docker Compose primeiro."
     fi
 }
@@ -62,7 +62,7 @@ setup() {
 # Build da aplicação
 build() {
     log "Fazendo build da aplicação..."
-    docker-compose build --no-cache
+    docker compose build --no-cache
     log "Build concluído!"
 }
 
@@ -74,14 +74,14 @@ deploy() {
     
     # Parar containers se estiverem rodando
     log "Parando containers existentes..."
-    docker-compose down || true
+    docker compose down || true
     
     # Build da imagem
     build
     
     # Subir containers
     log "Subindo containers..."
-    docker-compose up -d
+    docker compose up -d
     
     # Aguardar containers ficarem prontos
     log "Aguardando containers ficarem prontos..."
@@ -96,19 +96,19 @@ deploy() {
 # Verificar status dos containers
 status() {
     log "Status dos containers:"
-    docker-compose ps
+    docker compose ps
     
     echo ""
     log "Logs recentes:"
-    docker-compose logs --tail=20 api
+    docker compose logs --tail=20 api
 }
 
 # Ver logs
 logs() {
     if [ -z "$1" ]; then
-        docker-compose logs -f
+        docker compose logs -f
     else
-        docker-compose logs -f "$1"
+        docker compose logs -f "$1"
     fi
 }
 
@@ -117,7 +117,7 @@ backup() {
     local backup_file="backups/backup-$(date +%Y%m%d_%H%M%S).sql"
     log "Criando backup do banco de dados..."
     
-    docker-compose exec db mysqldump -u root -p$(grep DB_ROOT_PASSWORD .env | cut -d '=' -f 2) --all-databases > "$backup_file"
+    docker compose exec db mysqldump -u root -p$(grep DB_ROOT_PASSWORD .env | cut -d '=' -f 2) --all-databases > "$backup_file"
     
     if [ $? -eq 0 ]; then
         log "Backup criado com sucesso: $backup_file"
@@ -141,7 +141,7 @@ restore() {
     
     if [[ $confirm =~ ^[Yy]$ ]]; then
         log "Restaurando backup: $1"
-        docker-compose exec -T db mysql -u root -p$(grep DB_ROOT_PASSWORD .env | cut -d '=' -f 2) < "$1"
+        docker compose exec -T db mysql -u root -p$(grep DB_ROOT_PASSWORD .env | cut -d '=' -f 2) < "$1"
         log "Backup restaurado com sucesso!"
     else
         log "Operação cancelada."
@@ -165,28 +165,28 @@ update() {
 # Executar migrations do Prisma
 migrate() {
     log "Executando migrations do Prisma..."
-    docker-compose exec api npx prisma migrate deploy
+    docker compose exec api npx prisma migrate deploy
     log "Migrations executadas!"
 }
 
 # Gerar cliente Prisma
 generate() {
     log "Gerando cliente Prisma..."
-    docker-compose exec api npx prisma generate
+    docker compose exec api npx prisma generate
     log "Cliente Prisma gerado!"
 }
 
 # Reiniciar aplicação
 restart() {
     log "Reiniciando aplicação..."
-    docker-compose restart api
+    docker compose restart api
     log "Aplicação reiniciada!"
 }
 
 # Parar aplicação
 stop() {
     log "Parando aplicação..."
-    docker-compose down
+    docker compose down
     log "Aplicação parada!"
 }
 
