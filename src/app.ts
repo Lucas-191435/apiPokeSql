@@ -29,5 +29,15 @@ app.get('/', (req: Request, res: Response) => {
   })
 })
 
+// Health check endpoint for Docker
+app.get('/health', (req: Request, res: Response) => {
+  res.status(200).json({
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: process.env.ENVIRONMENT || 'development'
+  })
+})
+
 
 export default app

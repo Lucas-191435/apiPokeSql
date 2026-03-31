@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  db:
+    image: mysql:8.0
+    container_name: pokesql-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mysql_pokeapi:/var/lib/mysql
+      - ./backups:/backups
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+      interval: 30s
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  # API Application
+  api:
+    build: .
+    container_name: pokesql-api
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      PORT: ${PORT}
+      DATABASE_URL: mysql://${DB_USER}:${DB_PASSWORD}@db:3306/${DB_NAME}
+      SECRET_KEY: ${SECRET_KEY}
+      APP_URL: ${APP_URL}
+      ENVIRONMENT: ${ENVIRONMENT}
+      WEB_URL: ${WEB_URL}
+    volumes:
+      - ./tmp:/app/tmp
+      - uploads:/app/uploads
+    ports:
+      - "${PORT}:3333"
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "npx prisma migrate deploy &&
+             yarn start"
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3333/health', (res) => process.exit(res.statusCode === 200 ? 0 : 1))"]
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+      interval: 30s
+
+volumes:
+  mysql_pokeapi:
+  uploads:
+
+networks:
+  default:
+    name: pokesql-network
