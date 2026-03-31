@@ -1,11 +1,10 @@
-import multer, { diskStorage, FileFilterCallback } from 'multer'
-import { Request } from 'express'
+import multer, { diskStorage } from 'multer'
 import { randomBytes } from 'crypto'
 import path from 'path'
 
 const multerConfig = {
     storage: diskStorage({
-        destination: (req: Request, file, callback) => {
+        destination: (req: any, file: any, callback: any) => {
             const fileName = file.fieldname
             console.log(fileName);
             let uploadPath
@@ -24,7 +23,7 @@ const multerConfig = {
             callback(null, uploadPath)
         },
 
-        filename: (req, file, callback) => {
+        filename: (req: any, file: any, callback: any) => {
             randomBytes(16, (err, hash) => {
                 if (err) return callback(err, file.filename)
 
@@ -42,7 +41,7 @@ const multerConfig = {
         fileSize: 5 * 1024 * 1024, // 5 MB
     },
 
-    fileFilter: (req: Request, file: Express.Multer.File, callback: FileFilterCallback) => {
+    fileFilter: (req: any, file: any, callback: any) => {
         const allowedMimes = ['image/jpeg', 'image/jpg', 'image/png']
 
         if (allowedMimes.includes(file.mimetype)) {

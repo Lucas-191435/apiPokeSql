@@ -18,7 +18,7 @@ const routes = Router();
 
 const userController = new AccountController();
 
-routes.post("/user", upload.array('avatarProfile',2), (req: Request, res: Response) =>
+routes.post("/user", upload.array('avatarProfile',2) as any, (req: Request, res: Response) =>
     userController.create(req, res)
 );
 
