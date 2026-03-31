@@ -5,16 +5,22 @@
     "outDir": "dist",
     "sourceMap": true,
     "strict": true,
-    "lib": ["ESNext"],
+    "lib": [
+      "ESNext"
+    ],
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "allowJs": false,
-    "typeRoots": ["src/types", "./node_modules/@types"],
-    "baseUrl": "../.."
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
+    "baseUrl": "."
   },
   "ts-node": {
-    "require": ["tsconfig-paths/register"]
+    "require": [
+      "tsconfig-paths/register"
+    ]
   }
 }
