@@ -47,7 +47,7 @@ services:
       db:
         condition: service_healthy
     command: >
-      sh -c "npx prisma db push --accept-data-loss &&
+      sh -c "npx prisma db push --accept-data-loss --skip-generate &&
              yarn start"
     healthcheck:
       test: ["CMD", "node", "-e", "require('http').get('http://localhost:3333/health', (res) => process.exit(res.statusCode === 200 ? 0 : 1))"]
