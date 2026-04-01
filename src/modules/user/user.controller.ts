@@ -136,7 +136,8 @@ class AccountController {
         .status(200)
         .json({ message: "Conta encontrada.", token: data?.token, data: {
           ...data?.user,
-          avatarUrl: `${process.env.APP_URL}/avatars/${JSON.parse(data?.user.avatar ?? '')[0]}`
+          avatarUrl: ``
+          // avatarUrl: `${process.env.APP_URL}/avatars/${JSON.parse(data?.user?.avatar ?? '')[0]}`
         } });
     } catch (error) {
       const err = error as IError;

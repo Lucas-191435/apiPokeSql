@@ -33,7 +33,7 @@ services:
       - .env
     environment:
       PORT: ${PORT}
-      DATABASE_URL: mysql://${DB_USER}:${DB_PASSWORD}@db:3306/${DB_NAME}
+      DATABASE_URL: mysql://${DB_USER}:${DB_PASSWORD}@187.127.0.248:3306/${DB_NAME}
       SECRET_KEY: ${SECRET_KEY}
       APP_URL: ${APP_URL}
       ENVIRONMENT: ${ENVIRONMENT}

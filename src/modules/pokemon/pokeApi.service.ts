@@ -55,6 +55,7 @@ class PokeAPI implements PokeAPIService.IPokeAPIService {
 
             const pokemon: Promise<IPokemon>[] = pokemonRes.data.results.map(async (pokemon) => {
                 const dados: IPokemonPokeAPi = await PokeAPIClient.get(`pokemon/${pokemon.name}`);
+                console.log(`Fetched data for Pokemon: ${dados.data.name} (ID: ${dados.data.id})`);
                 return {
                     number: dados.data.id,
                     name: dados.data.name,
