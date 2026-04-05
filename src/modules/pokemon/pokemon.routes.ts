@@ -31,9 +31,9 @@ routes.get("/pokemon/:id", valideteUserToken, asyncHandler(async (req) => {
     })
 )
 
-routes.get("/insertPokemonInDataBase",  (req: Request, res: Response) => {
-    pokemonController.insertPokemonInDataBase(req, res)
-});
+// routes.get("/insertPokemonInDataBase",  (req: Request, res: Response) => {
+//     pokemonController.insertPokemonInDataBase(req, res)
+// });
 
 
 export default routes;
