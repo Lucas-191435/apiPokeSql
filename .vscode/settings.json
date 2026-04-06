@@ -57,4 +57,7 @@
     // Define a cor do texto da barra de título quando a janela está inativa
     "titleBar.inactiveForeground": "#15202b99"
   },
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
 }

@@ -101,15 +101,15 @@ model User {
 
 model Pokemon {
   id        String   @id @default(uuid())
-  pokeId    Int   @unique
-  name      String   
+  pokeId    Int      @unique
+  name      String
   img1      String?
   img2      String?
   img3      String?
   types     String?
   abilities String?
-  height    Float @default(0)
-  weight    Float @default(0)
+  height    Float    @default(0)
+  weight    Float    @default(0)
   region    Region   @default(KANTO)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -118,8 +118,8 @@ model Pokemon {
 }
 
 model Item {
-  id               String    @id @default(uuid())
-  pokeItemId       Int     @unique
+  id               String        @id @default(uuid())
+  pokeItemId       Int           @unique
   pokeCategoryId   Int?
   pokeItemPocketId Int?
   name             String
@@ -127,16 +127,48 @@ model Item {
   category         ItemCategory?
   description      String?
   effect           String?
-  isConsumable     Boolean @default(false)
-  isHeldItem       Boolean @default(false)
-  isBattleUse      Boolean @default(false)
-  isDiscardable    Boolean @default(false)
-  isPokemonUse     Boolean @default(false)
+  isConsumable     Boolean       @default(false)
+  isHeldItem       Boolean       @default(false)
+  isBattleUse      Boolean       @default(false)
+  isDiscardable    Boolean       @default(false)
+  isPokemonUse     Boolean       @default(false)
   price            Int?
-  regions           String?
+  regions          String?
 
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("items") // Nome da tabela no banco de dados
+}
+
+model Move {
+  id            String  @id @default(uuid())
+  pokeMoveId    Int     @unique
+  name          String  @unique
+  accuracy      Int?
+  power         Int?
+  pp            Int?
+  priority      Int?
+  type          String?
+  description   String?
+  target        String?
+  damage_class  String?
+  effect        String?
+  effect_chance Int?
+  ailment       String?
+  category      String?
+  crit_rate     Int?
+  drain         Int?
+  flinch_chance Int?
+  healing       Int?
+  min_hits      Int?
+  max_hits      Int?
+  min_turns     Int?
+  max_turns     Int?
+  stat_chance   Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("moves") // Nome da tabela no banco de dados
 }
