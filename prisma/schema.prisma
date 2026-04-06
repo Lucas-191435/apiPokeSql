@@ -100,19 +100,20 @@ model User {
 }
 
 model Pokemon {
-  id        String   @id @default(uuid())
-  pokeId    Int      @unique
-  name      String
-  img1      String?
-  img2      String?
-  img3      String?
-  types     String?
-  abilities String?
-  height    Float    @default(0)
-  weight    Float    @default(0)
-  region    Region   @default(KANTO)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String        @id @default(uuid())
+  pokeId       Int           @unique
+  name         String
+  img1         String?
+  img2         String?
+  img3         String?
+  types        String?
+  abilities    String?
+  height       Float         @default(0)
+  weight       Float         @default(0)
+  region       Region        @default(KANTO)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  pokemonMoves PokemonMove[]
 
   @@map("Pokemon") // Nome da tabela no banco de dados
 }
@@ -137,6 +138,8 @@ model Item {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  moves PokemonMove[]
 
   @@map("items") // Nome da tabela no banco de dados
 }
@@ -170,5 +173,33 @@ model Move {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  pokemons PokemonMove[]
+
   @@map("moves") // Nome da tabela no banco de dados
+}
+
+enum LearnMethod {
+  LEVEL_UP
+  MACHINE
+  EGG
+  TUTOR
+  UNKNOWN
+}
+
+model PokemonMove {
+  id           String      @id @default(uuid())
+  pokemonId    String
+  moveId       String
+  learn_method LearnMethod @default(UNKNOWN)
+  level        Int         @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  pokemon Pokemon @relation(fields: [pokemonId], references: [id])
+  move    Move    @relation(fields: [moveId], references: [id])
+  item    Item?   @relation(fields: [itemId], references: [id])
+  itemId  String?
+
+  @@map("pokemon_moves") // Nome da tabela no banco de dados
 }
