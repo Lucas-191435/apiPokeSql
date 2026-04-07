@@ -1,7 +1,7 @@
 import { Pokemon, Region } from "@prisma/client";
 import { IPokemon } from "../modules/pokemon/pokeApi.service";
 
-export const transformPokemonData = (pokemon: Pokemon): IPokemon => {
+export const transformPokemonData = (pokemon: Pokemon ): IPokemon  => {
     return {
         number: pokemon.pokeId,
         name: pokemon.name,
