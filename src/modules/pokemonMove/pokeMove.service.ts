@@ -105,7 +105,13 @@ class PokeMoveService {
                 }
             });
 
-            const moves = pokeMoves.map(move => {return {...move.move}});
+            const moves = pokeMoves.map(move => {
+                return {
+                    learn_method: move.learn_method,
+                    level: move.level,
+                    ...move.move
+                }
+            });
 
             return { name: pokemon?.name, moves };
         } catch (error) {
