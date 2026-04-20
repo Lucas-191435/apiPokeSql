@@ -32,9 +32,27 @@ export namespace AppPokemonService {
       ;
     export type Handler = ServiceFn<Args, Promise<Result>>;
   }
+
+  export namespace InsertPokemonStatsInDataBase {
+    export type Args = {
+        pokemonId: number;
+      stats: {
+        atk: number;
+        def: number;  
+        hp: number;
+        spAtk: number;
+        spDef: number;
+        speed: number;
+      };
+    };
+    export type Result = void | IError
+      ;
+    export type Handler = ServiceFn<Args, Promise<Result>>;
+  }
   export interface IPokemonService {
     getPokemons: AppPokemonService.GetPokemons.Handler;
     getPokemon: AppPokemonService.GetPokemon.Handler;
     insertPokemonInDataBase: AppPokemonService.InsertPokemonInDataBase.Handler;
+    insertPokemonStatsInDataBase: AppPokemonService.InsertPokemonStatsInDataBase.Handler;
   }
 }

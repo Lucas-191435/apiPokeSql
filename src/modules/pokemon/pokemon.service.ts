@@ -153,6 +153,49 @@ class PokemonService implements AppPokemonService.IPokemonService {
             throw error
         }
     }
+
+    insertPokemonStatsInDataBase: AppPokemonService.InsertPokemonStatsInDataBase.Handler = async ({ pokemonId, stats }) => {
+        try {
+
+            if (!pokemonId) {
+                throw createError("pokemonId is required", 400);
+            }
+            
+            await prismaClient.pokemon.update({
+                where: { pokeId: pokemonId },
+                data: {
+                    atk: stats.atk,
+                    def: stats.def,
+                    hp: stats.hp,
+                    spAtk: stats.spAtk,
+                    spDef: stats.spDef,
+                    speed: stats.speed,
+                },
+            });
+
+        } catch (error) {
+            throw error
+        }
+    }
+
+    getAllPokemonsFromDB = async () => {
+        try {
+            const pokemons = await prismaClient.pokemon.findMany({
+                select: {
+                    id: true,
+                    pokeId: true,
+                    name: true
+                },
+                orderBy: {
+                    pokeId: 'asc'
+                }
+            });
+            return pokemons;
+        } catch (error) {
+            console.error("Error fetching pokemons from database:", error);
+            throw error;
+        }
+    }
 }
 
 export default PokemonService;
