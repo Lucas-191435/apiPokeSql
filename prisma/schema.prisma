@@ -100,16 +100,24 @@ model User {
 }
 
 model Pokemon {
-  id           String        @id @default(uuid())
-  pokeId       Int           @unique
-  name         String
-  img1         String?
-  img2         String?
-  img3         String?
-  types        String?
-  abilities    String?
-  height       Float         @default(0)
-  weight       Float         @default(0)
+  id        String  @id @default(uuid())
+  pokeId    Int     @unique
+  name      String
+  img1      String?
+  img2      String?
+  img3      String?
+  types     String?
+  abilities String?
+  height    Float   @default(0)
+  weight    Float   @default(0)
+
+  hp    Int @default(0)
+  atk   Int @default(0)
+  def   Int @default(0)
+  spAtk Int @default(0)
+  spDef Int @default(0)
+  speed Int @default(0)
+
   region       Region        @default(KANTO)
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt

@@ -25,3 +25,4 @@ ssl/*
 .env.local
 .env.development
 .env.test
+dump
