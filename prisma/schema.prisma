@@ -81,20 +81,21 @@ enum ItemCategory {
 }
 
 model User {
-  id               String    @id @default(uuid())
-  email            String    @unique
+  id               String      @id @default(uuid())
+  email            String      @unique
   password         String?
-  role             Role      @default(CLIENT)
+  role             Role        @default(CLIENT)
   name             String
   avatar           String?
   birthday         DateTime?
-  oauthId          String?   @unique
+  oauthId          String?     @unique
   oauthProvider    String?
   oauthProfileUrl  String?
-  resetToken       String?   @unique
+  resetToken       String?     @unique
   resetTokenExpiry DateTime?
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  myPokemons       MyPokemon[]
 
   @@map("users") // Nome da tabela no banco de dados
 }
@@ -122,6 +123,7 @@ model Pokemon {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   pokemonMoves PokemonMove[]
+  myPokemons   MyPokemon[]
 
   @@map("Pokemon") // Nome da tabela no banco de dados
 }
@@ -210,4 +212,18 @@ model PokemonMove {
   itemId  String?
 
   @@map("pokemon_moves") // Nome da tabela no banco de dados
+}
+
+model MyPokemon {
+  id        String   @id @default(uuid())
+  userId    String
+  pokemonId String
+  nickname  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id])
+  pokemon Pokemon @relation(fields: [pokemonId], references: [id])
+
+  @@map("my_pokemon")
 }
