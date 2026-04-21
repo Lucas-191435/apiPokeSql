@@ -6,6 +6,7 @@ import { IPokemonPokeAPi } from "../../types/pokeAPi/IPokemonPokeAPI";
 import logger from "../../utils/logger";
 
 export type IPokemon = {
+    id: string;
     number: number;
     name: string;
     types: string[];
@@ -57,6 +58,7 @@ class PokeAPI implements PokeAPIService.IPokeAPIService {
                 const dados: IPokemonPokeAPi = await PokeAPIClient.get(`pokemon/${pokemon.name}`);
                 console.log(`Fetched data for Pokemon: ${dados.data.name} (ID: ${dados.data.id})`);
                 return {
+                    id: dados.data.id.toString(),
                     number: dados.data.id,
                     name: dados.data.name,
                     types: dados.data.types.map((type) => type.type.name),

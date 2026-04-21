@@ -9,11 +9,19 @@ class PokemonMoveController {
     }
 
     async getAllPokemonOfUser({id}: {id: string}){
-        
+        const pokemons = await this.pokemonService.getAllPokemonsOfUser({
+            userId: id
+        });
+        return pokemons;
     }
 
-    async capturePokemon({userId, pokemonId}: {userId: string, pokemonId: string}){
-        
+    async capturePokemon({userId, pokemonId, nickname}: {userId: string, pokemonId: string, nickname: string}){
+        const pokemon = await this.pokemonService.capturePokemon({
+            userId,
+            pokemonId,
+            nickname
+        });
+        return pokemon;
     }
 }
 

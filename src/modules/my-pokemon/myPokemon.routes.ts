@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { valideteUserToken } from "../../middlewares/valideteUserToken";
+import { valideteUserToken, AuthenticatedRequest } from "../../middlewares/valideteUserToken";
 import { validateRequest } from "../../middlewares/validateRequest";
 
 const routes = Router();
@@ -8,21 +8,21 @@ import { asyncHandler } from "../../utils/asyncHandler";
 const pokemonController = new PokemonController();
 
 
-routes.get("/my-pokemon/:id", valideteUserToken, asyncHandler(async (req) => {
-        const { id } = req.params as any;
-        console.log("Received request for pokemon move with id:", id);
+routes.get("/my-pokemon", valideteUserToken, asyncHandler(async (req: AuthenticatedRequest) => {
+        console.log("Received request for user's pokemon from user:", req.user);
         return await pokemonController.getAllPokemonOfUser({
-            id
+            id: req.user!
         });
     })
 )
 
-routes.post("/my-pokemon/capture/:id", valideteUserToken, asyncHandler(async (req) => {
-        const { id } = req.params as any;
-        console.log("Received request for pokemon move with id:", id);
+routes.post("/my-pokemon/capture", valideteUserToken, asyncHandler(async (req: AuthenticatedRequest) => {
+        console.log("Received request for pokemon capture from user:", req.user);
+        console.log("Request body:", req.body);
         return await pokemonController.capturePokemon({
-            userId: id,
-            pokemonId: req.body.pokemonId
+            userId: req.user!,
+            pokemonId: req.body.id,
+            nickname: req.body.nickname
         });
     })
 )

@@ -9,8 +9,12 @@ interface IJwtPayload {
   sub: string;
 }
 
+interface AuthenticatedRequest extends Request {
+  user?: string;
+}
+
 const valideteUserToken = async (
-  req: Request,
+  req: AuthenticatedRequest,
   res: any,
   next: NextFunction
 ) => {
@@ -29,7 +33,7 @@ const valideteUserToken = async (
     ) as IJwtPayload;
 
     const user = await prismaClient.user.findFirst({ where: { id } });
-    res.user = user?.id;
+    req.user = user?.id;
 
     return next();
   } catch {
@@ -37,4 +41,4 @@ const valideteUserToken = async (
   }
 };
 
-export { IJwtPayload, valideteUserToken };
+export { IJwtPayload, valideteUserToken, AuthenticatedRequest };
