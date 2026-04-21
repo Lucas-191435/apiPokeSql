@@ -3,6 +3,7 @@ import { IPokemon } from "../modules/pokemon/pokeApi.service";
 
 export const transformPokemonData = (pokemon: Pokemon ): IPokemon  => {
     return {
+        id: pokemon.id,
         number: pokemon.pokeId,
         name: pokemon.name,
         types: JSON.parse(pokemon.types || "[]"),
