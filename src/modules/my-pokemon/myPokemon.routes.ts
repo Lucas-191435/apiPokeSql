@@ -28,6 +28,14 @@ routes.post("/my-pokemon/capture", valideteUserToken, asyncHandler(async (req: A
 )
 
 
+routes.delete("/my-pokemon/leave/:id", valideteUserToken, asyncHandler(async (req: AuthenticatedRequest) => {
+        return await pokemonController.leavePokemon({
+            userId: req.user!,
+            pokemonId: req.params.id,
+        });
+    })
+)
+
 
 
 export default routes;

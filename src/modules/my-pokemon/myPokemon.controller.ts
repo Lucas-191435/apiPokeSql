@@ -23,6 +23,14 @@ class PokemonMoveController {
         });
         return pokemon;
     }
+
+    async leavePokemon({userId, pokemonId}: {userId: string, pokemonId: string}){
+        const result = await this.pokemonService.leavePokemon({
+            userId,
+            pokemonId
+        });
+        return result;
+    }
 }
 
 export default PokemonMoveController;

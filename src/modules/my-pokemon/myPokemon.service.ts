@@ -69,7 +69,7 @@ class MyPokemonService {
             });
 
             if (countAllCapturedPokemons >= 20) {
-                 throw createError("User cannot capture more than 20 pokemons", 404);
+                 throw createError("Usuário não pode capturar mais de 20 pokemons", 404);
             }
 
 
@@ -83,7 +83,24 @@ class MyPokemonService {
 
             return pokemons;
         } catch (error) {
-            console.error("Error fetching pokemons from database:", error);
+            console.error("Erro ao capturar pokemon:", error);
+            throw error;
+        }
+    }
+
+    leavePokemon = async ({ userId, pokemonId }: { userId: string, pokemonId: string }) => {
+        try {
+            const result = await prismaClient.myPokemon.deleteMany({
+                where: {
+                    userId,
+                    pokemonId
+                }
+            });
+            return {
+                message: "Pokemon liberado com sucesso" 
+            };
+        } catch (error) {
+            console.error("Erro ao liberar pokemon:", error);
             throw error;
         }
     }
