@@ -36,6 +36,16 @@ routes.delete("/my-pokemon/leave/:id", valideteUserToken, asyncHandler(async (re
     })
 )
 
+routes.put("/my-pokemon/team", valideteUserToken, asyncHandler(async (req: AuthenticatedRequest) => {
+
+        console.log("teams", req.body.teams);
+        return await pokemonController.updatePokemonTeam({
+            userId: req.user!,
+            data: req.body.teams,
+        });
+    })
+)
+
 
 
 export default routes;

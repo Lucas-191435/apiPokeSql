@@ -2,6 +2,7 @@ import { Prisma, Pokemon, Region } from "@prisma/client";
 import { IError } from "../../types/generics";
 import prismaClient from "../../database";
 import { transformPokemonData } from "../../utils/utils";
+import { DTOUpdatePokemonTeam } from "./types/IMyPokemonService";
 
 
 const createError = (message: string, status: number) => {
@@ -38,9 +39,9 @@ class MyPokemonService {
         }
     }
 
-    capturePokemon = async ({ 
-        userId, pokemonId, nickname 
-    }: { 
+    capturePokemon = async ({
+        userId, pokemonId, nickname
+    }: {
         userId: string,
         pokemonId: string,
         nickname: string,
@@ -69,7 +70,7 @@ class MyPokemonService {
             });
 
             if (countAllCapturedPokemons >= 20) {
-                 throw createError("Usuário não pode capturar mais de 20 pokemons", 404);
+                throw createError("Usuário não pode capturar mais de 20 pokemons", 404);
             }
 
 
@@ -97,10 +98,35 @@ class MyPokemonService {
                 }
             });
             return {
-                message: "Pokemon liberado com sucesso" 
+                message: "Pokemon liberado com sucesso"
             };
         } catch (error) {
             console.error("Erro ao liberar pokemon:", error);
+            throw error;
+        }
+    }
+
+    updatePokemonTeam = async ({ userId, data }: DTOUpdatePokemonTeam) => {
+        try {
+            const updatePromises = data.map(({ pokemonId, teamAlpha, teamBeta, teamGamma }) => {
+                return prismaClient.myPokemon.updateMany({
+                    where: {
+                        userId,
+                        pokemonId
+                    },
+                    data: {
+                        teamAlpha,
+                        teamBeta,
+                        teamGamma
+                    }
+                });
+            });
+            await Promise.all(updatePromises);
+            return {
+                message: "Team updated successfully"
+            };
+        } catch (error) {
+            console.error("Erro ao atualizar time de pokemons:", error);
             throw error;
         }
     }
