@@ -211,19 +211,46 @@ model PokemonMove {
   item    Item?   @relation(fields: [itemId], references: [id])
   itemId  String?
 
-  @@map("pokemon_moves") // Nome da tabela no banco de dados
+  myPokemonMoves MyPokemonMoves[]
+
+  @@map("pokemon_moves")
 }
 
 model MyPokemon {
-  id        String   @id @default(uuid())
+  id        String  @id @default(uuid())
   userId    String
   pokemonId String
   nickname  String?
+
+  teamAlpha Boolean? @default(false)
+  teamBeta  Boolean? @default(false)
+  teamGamma Boolean? @default(false)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   user    User    @relation(fields: [userId], references: [id])
   pokemon Pokemon @relation(fields: [pokemonId], references: [id])
 
+  myPokemonMoves MyPokemonMoves[]
+
   @@map("my_pokemon")
+}
+
+model MyPokemonMoves {
+  id            String @id @default(uuid())
+  pokemonMoveId String
+  myPokemonId   String
+
+  teamAlpha Boolean? @default(false)
+  teamBeta  Boolean? @default(false)
+  teamGamma Boolean? @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  pokemonMove PokemonMove @relation(fields: [pokemonMoveId], references: [id])
+  myPokemon   MyPokemon   @relation(fields: [myPokemonId], references: [id])
+
+  @@map("my_pokemon_moves")
 }
