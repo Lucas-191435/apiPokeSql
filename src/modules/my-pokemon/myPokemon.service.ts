@@ -2,8 +2,8 @@ import { Prisma, Pokemon, Region } from "@prisma/client";
 import { IError } from "../../types/generics";
 import prismaClient from "../../database";
 import { transformPokemonData } from "../../utils/utils";
-import { DTOUpdatePokemonTeam } from "./types/IMyPokemonService";
-
+import { DTOUpdatePokemonMoves, DTOUpdatePokemonTeam } from "./types/IMyPokemonService";
+import { validate as validateUUID } from 'uuid';
 
 const createError = (message: string, status: number) => {
     const error = new Error(message);
@@ -11,6 +11,13 @@ const createError = (message: string, status: number) => {
     return error;
 };
 
+const validateUUIDArray = (moves: string[]): { isValid: boolean; invalidMoves: string[] } => {
+    const invalidMoves = moves.filter(move => !validateUUID(move));
+    return {
+        isValid: invalidMoves.length === 0,
+        invalidMoves
+    };
+};
 class MyPokemonService {
     getAllPokemonsOfUser = async ({ userId }: { userId: string }) => {
         try {
@@ -131,6 +138,26 @@ class MyPokemonService {
         }
     }
 
+    updatePokemonMoves = async ({ userId, data }: DTOUpdatePokemonMoves) => {
+        try {
+            const { myPokemonId, team, moves } = data;
+
+            const result = await prismaClient.myPokemon.update({
+                where: {
+                    userId: userId,
+                    id: myPokemonId
+                },
+                data: {
+                    [team + "Move"]: moves
+                }
+            });
+            return result;
+
+        } catch (error) {
+            console.error("Erro ao atualizar movimentos de pokemons:", error);
+            throw error;
+        }
+    }
 }
 
 export default MyPokemonService;

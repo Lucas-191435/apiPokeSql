@@ -5,6 +5,7 @@ import { validateRequest } from "../../middlewares/validateRequest";
 const routes = Router();
 import PokemonController from "./myPokemon.controller";
 import { asyncHandler } from "../../utils/asyncHandler";
+import { updatePokemonMovesSchema } from "./myPokemon.schema";
 const pokemonController = new PokemonController();
 
 
@@ -45,6 +46,15 @@ routes.put("/my-pokemon/team", valideteUserToken, asyncHandler(async (req: Authe
         });
     })
 )
+routes.put("/my-pokemon/moves", valideteUserToken,  validateRequest(updatePokemonMovesSchema),  asyncHandler(async (req: AuthenticatedRequest) => {
+
+        return await pokemonController.updatePokemonMoves({
+            userId: req.user!,
+            data: req.body,
+        });
+    })
+)
+
 
 
 

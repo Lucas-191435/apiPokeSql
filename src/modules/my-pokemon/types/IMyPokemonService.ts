@@ -9,3 +9,13 @@ export type MyteamOfPokemon = {
 export type DTOUpdatePokemonTeam = {
     userId: string, data: MyteamOfPokemon[]
 }
+
+export type MyPokemonMove = {
+    myPokemonId: string,
+    team: "teamAlpha" | "teamBeta" | "teamGamma",
+    moves: string[]
+}
+
+export type DTOUpdatePokemonMoves = {
+    userId: string, data: MyPokemonMove
+}

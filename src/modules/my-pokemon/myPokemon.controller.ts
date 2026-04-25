@@ -1,7 +1,7 @@
 import { sinnoh } from './../../utils/pokedexs/sinnoh';
 import { Request, Response } from "express";
 import MyPokemonService from "./myPokemon.service";
-import { DTOUpdatePokemonTeam } from './types/IMyPokemonService';
+import { DTOUpdatePokemonMoves, DTOUpdatePokemonTeam } from './types/IMyPokemonService';
 
 class PokemonMoveController {
     private myPokemonService: MyPokemonService;
@@ -35,6 +35,13 @@ class PokemonMoveController {
 
     async updatePokemonTeam(data: DTOUpdatePokemonTeam) {
         const result = await this.myPokemonService.updatePokemonTeam({
+            ...data 
+        });
+        return result;
+    }
+
+    async updatePokemonMoves(data: DTOUpdatePokemonMoves) {
+        const result = await this.myPokemonService.updatePokemonMoves({
             ...data 
         });
         return result;

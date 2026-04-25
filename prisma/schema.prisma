@@ -237,7 +237,7 @@ model MyPokemon {
   pokemon Pokemon @relation(fields: [pokemonId], references: [id])
 
   // myPokemonMoves MyPokemonMoves[]
-
+  @@unique([userId, pokemonId]) // Esta linha cria a constraint única
   @@map("my_pokemon")
 }
 
