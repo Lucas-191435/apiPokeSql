@@ -37,12 +37,13 @@ routes.delete("/my-pokemon/leave/:id", valideteUserToken, asyncHandler(async (re
     })
 )
 
-routes.put("/my-pokemon/team", valideteUserToken, asyncHandler(async (req: AuthenticatedRequest) => {
+routes.put("/my-pokemon/update-team", valideteUserToken, asyncHandler(async (req: AuthenticatedRequest) => {
 
-        console.log("teams", req.body.teams);
+        console.log("teams", req.body);
         return await pokemonController.updatePokemonTeam({
             userId: req.user!,
-            data: req.body.teams,
+            teamName: req.body.teamName,
+            team: req.body.team,
         });
     })
 )

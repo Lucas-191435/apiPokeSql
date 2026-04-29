@@ -7,7 +7,7 @@ export type MyteamOfPokemon = {
 }
 
 export type DTOUpdatePokemonTeam = {
-    userId: string, data: MyteamOfPokemon[]
+    userId: string, teamName: "teamAlpha" | "teamBeta" | "teamGamma", team: string[]
 }
 
 export type MyPokemonMove = {

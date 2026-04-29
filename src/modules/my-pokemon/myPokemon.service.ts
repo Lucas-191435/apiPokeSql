@@ -4,6 +4,7 @@ import prismaClient from "../../database";
 import { transformPokemonData } from "../../utils/utils";
 import { DTOUpdatePokemonMoves, DTOUpdatePokemonTeam } from "./types/IMyPokemonService";
 import { validate as validateUUID } from 'uuid';
+import logger from "src/utils/logger";
 
 const createError = (message: string, status: number) => {
     const error = new Error(message);
@@ -22,22 +23,20 @@ class MyPokemonService {
     getAllPokemonsOfUser = async ({ userId }: { userId: string }) => {
         try {
             const pokemons = await prismaClient.myPokemon.findMany({
-                where: {
-                    userId
+            where: {
+                userId,
+            },
+            include: {
+                pokemon: {
+                    select: {
+                        id: true,
+                        name: true,
+                        img1: true,
+                        types: true, // Certifique-se de que este campo é necessário
+                    },
                 },
-                select: {
-                    id: true,
-                    nickname: true,
-                    pokemon: {
-                        select: {
-                            id: true,
-                            name: true,
-                            img1: true,
-                            types: true,
-                        }
-                    }
-                }
-            });
+            },
+        });
 
             return pokemons;
         } catch (error) {
@@ -98,12 +97,14 @@ class MyPokemonService {
 
     leavePokemon = async ({ userId, pokemonId }: { userId: string, pokemonId: string }) => {
         try {
-            const result = await prismaClient.myPokemon.deleteMany({
+            await prismaClient.myPokemon.deleteMany({
                 where: {
                     userId,
-                    pokemonId
+                    id: pokemonId
                 }
             });
+
+            logger.info(`Remove Pokémon with ID ${pokemonId} in collection of user ${userId}`);
             return {
                 message: "Pokemon liberado com sucesso"
             };
@@ -113,30 +114,58 @@ class MyPokemonService {
         }
     }
 
-    updatePokemonTeam = async ({ userId, data }: DTOUpdatePokemonTeam) => {
+    updatePokemonTeam = async ({ userId, teamName, team }: DTOUpdatePokemonTeam) => {
         try {
-            const updatePromises = data.map(({ pokemonId, teamAlpha, teamBeta, teamGamma }) => {
-                return prismaClient.myPokemon.updateMany({
+            if (!teamName || !Array.isArray(team)) {
+                throw createError("Parâmetros inválidos: 'teamName' deve ser uma string e 'team' deve ser um array.", 400);
+            }
+
+            const result = await prismaClient.$transaction(async (prisma) => {
+                const changePokemon = await prisma.myPokemon.updateMany({
                     where: {
                         userId,
-                        pokemonId
+                        [teamName]: true,
+                        id: {
+                            notIn: team, // Exclui os itens com IDs no array
+                        },
                     },
                     data: {
-                        teamAlpha,
-                        teamBeta,
-                        teamGamma
-                    }
+                        [teamName]: false,
+                    },
                 });
+
+                logger.info(`${changePokemon.count} pokémons removidos do time '${teamName}' para o usuário ${userId}.`);
+
+                const updatePokemon = await prisma.myPokemon.updateMany({
+                    where: {
+                        userId,
+                        [teamName]: false,
+                        id: {
+                            in: team,
+                        },
+                    },
+                    data: {
+                        [teamName]: true,
+                    },
+                });
+
+                logger.info(`${updatePokemon.count} pokémons adicionados ao time '${teamName}' para o usuário ${userId}.`);
+
+                return {
+                    removed: changePokemon.count,
+                    added: updatePokemon.count,
+                };
             });
-            await Promise.all(updatePromises);
+
             return {
-                message: "Team updated successfully"
+                message: "Team updated successfully",
+                details: result,
             };
         } catch (error) {
-            console.error("Erro ao atualizar time de pokemons:", error);
+            console.error("Erro ao atualizar time de pokémons:", error);
             throw error;
         }
-    }
+    };
 
     updatePokemonMoves = async ({ userId, data }: DTOUpdatePokemonMoves) => {
         try {
