@@ -47,6 +47,16 @@ routes.put("/my-pokemon/update-team", valideteUserToken, asyncHandler(async (req
         });
     })
 )
+
+routes.put("/my-pokemon/update-moves", valideteUserToken, asyncHandler(async (req: AuthenticatedRequest) => {
+
+        console.log("moves", req.body);
+        return await pokemonController.updatePokemonMoves({
+            userId: req.user!,
+            data: req.body,
+        });
+    })
+)
 routes.put("/my-pokemon/moves", valideteUserToken,  validateRequest(updatePokemonMovesSchema),  asyncHandler(async (req: AuthenticatedRequest) => {
 
         return await pokemonController.updatePokemonMoves({

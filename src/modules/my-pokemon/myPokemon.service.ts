@@ -30,6 +30,7 @@ class MyPokemonService {
                 pokemon: {
                     select: {
                         id: true,
+                        pokeId: true,
                         name: true,
                         img1: true,
                         types: true, // Certifique-se de que este campo é necessário
@@ -169,7 +170,7 @@ class MyPokemonService {
 
     updatePokemonMoves = async ({ userId, data }: DTOUpdatePokemonMoves) => {
         try {
-            const { myPokemonId, team, moves } = data;
+            const { myPokemonId, teamName, moves } = data;
 
             const result = await prismaClient.myPokemon.update({
                 where: {
@@ -177,7 +178,7 @@ class MyPokemonService {
                     id: myPokemonId
                 },
                 data: {
-                    [team + "Move"]: moves
+                    [teamName + "Move"]: moves
                 }
             });
             return result;
